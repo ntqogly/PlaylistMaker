@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="mainLayoutBackground">
+        <item name="android:background">@color/mainLayout_background</item>
+    </style>
+
+    <style name="settingsLayoutBackground">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="MainButtonsStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/main_text_size</item>
+        <item name="cornerRadius">@dimen/main_button_cornerRadius</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/icon_padding</item>
+        <item name="iconTint">@color/black</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:titleMarginTop">4dp</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+
+    <style name="settings_layout_text_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/settings_layout_height</item>
+        <item name="android:layout_marginStart">@dimen/settings_text_view_margin_start</item>
+        <item name="android:layout_marginEnd">@dimen/settings_layout_padding_end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/layout_settings_text_size</item>
+    </style>
+
+    <style name="settings_layout_header_button_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="fontFamily">@font/ys_text_regular</item>
+        <item name="paddingStart">1dp</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/main_text_size</item>
+        <item name="iconTint">@color/black</item>
+    </style>
+
+
+
+
+</resources>
