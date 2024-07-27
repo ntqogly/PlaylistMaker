@@ -5,8 +5,9 @@
     <string name="button_settings">Настройки</string>
     <string name="button_settingsLayout">Настройки</string>
     <string name="switcher_settingsLayout">Темная тема</string>
-    <string name="shareButton">Поделиться приложением</string>
-    <string name="shareTextView">Поделиться приложением</string>
+    <string name="share">Поделиться приложением</string>
     <string name="support">Написать в поддержку</string>
     <string name="termsOfUse">Пользовательское соглашение</string>
+    <string name="playlist_maker">Playlist Maker</string>
+    <string name="tv_dark_mode">Темная тема</string>
 </resources>

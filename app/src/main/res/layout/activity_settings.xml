@@ -9,8 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:orientation="vertical">
-
 
         <Button
             android:id="@+id/buttonSettings"
@@ -20,32 +20,55 @@
             android:text="@string/button_settingsLayout"
             android:textAlignment="textStart"
             android:textColor="@color/black"
+            android:textSize="@dimen/main_text_size"
             app:icon="@drawable/ic_baseline_arrow_back_24"
             app:iconTint="@color/black"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Switch
-            android:id="@+id/switchTheme"
+        <RelativeLayout
+            android:id="@+id/rl_switch"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="@string/switcher_settingsLayout"
-            app:layout_constraintTop_toBottomOf="@+id/buttonSettings"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            android:layout_height="@dimen/rl_height"
+            android:padding="@dimen/layout_settings_main_padding"
+            app:layout_constraintTop_toBottomOf="@+id/buttonSettings">
+
+            <TextView
+                android:id="@+id/tv_dark_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="@dimen/settings_text_view_margin_start"
+                android:text="@string/tv_dark_mode"
+                android:textColor="@color/black"
+                android:textSize="@dimen/settings_text_size" />
+
+            <Switch
+                android:id="@+id/switchTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/settings_layout_vector_margin_end"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rl_share"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:padding="10dp"
+            android:layout_height="@dimen/rl_height"
+            android:padding="@dimen/layout_settings_main_padding"
             android:textAlignment="textStart"
-            app:layout_constraintTop_toBottomOf="@+id/switchTheme">
+            app:layout_constraintTop_toBottomOf="@+id/rl_switch">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"
-                android:text="@string/shareTextView" />
+                android:layout_marginStart="@dimen/settings_text_view_margin_start"
+                android:text="@string/share"
+                android:textColor="@color/black"
+                android:textSize="@dimen/settings_text_size" />
 
             <ImageView
                 android:id="@+id/shareVector"
@@ -53,7 +76,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:paddingEnd="20dp"
+                android:layout_marginEnd="@dimen/settings_layout_vector_margin_end"
+                android:paddingEnd="@dimen/settings_layout_padding_end"
                 android:src="@drawable/ic_share"
                 tools:ignore="RtlSymmetry" />
 
@@ -62,16 +86,20 @@
         <RelativeLayout
             android:id="@+id/rl_support"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:padding="10dp"
+            android:layout_height="@dimen/rl_height"
+            android:padding="@dimen/layout_settings_main_padding"
             android:textAlignment="textStart"
             app:layout_constraintTop_toBottomOf="@+id/rl_share">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"
-                android:text="@string/support" />
+                android:layout_marginStart="@dimen/settings_text_view_margin_start"
+                android:text="@string/support"
+                android:textColor="@color/black"
+                android:textSize="@dimen/settings_text_size" />
 
             <ImageView
                 android:id="@+id/iv_support"
@@ -79,25 +107,30 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:paddingEnd="20dp"
+                android:layout_marginEnd="@dimen/settings_layout_vector_margin_end"
+                android:paddingEnd="@dimen/settings_layout_padding_end"
                 android:src="@drawable/ic_support"
                 tools:ignore="RtlSymmetry" />
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_termsOfUse"
+            android:id="@+id/rl_terms_of_use"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:padding="10dp"
+            android:layout_height="@dimen/rl_height"
+            android:padding="@dimen/layout_settings_main_padding"
             android:textAlignment="textStart"
             app:layout_constraintTop_toBottomOf="@+id/rl_support">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"
-                android:text="@string/termsOfUse" />
+                android:layout_marginStart="@dimen/settings_text_view_margin_start"
+                android:text="@string/termsOfUse"
+                android:textColor="@color/black"
+                android:textSize="@dimen/settings_text_size" />
 
             <ImageView
                 android:id="@+id/iv_termsOfUse"
@@ -105,7 +138,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:paddingEnd="20dp"
+                android:layout_marginEnd="@dimen/settings_layout_vector_margin_end"
+                android:paddingEnd="@dimen/settings_layout_padding_end"
                 android:src="@drawable/ic_termsofuse"
                 tools:ignore="RtlSymmetry" />
 

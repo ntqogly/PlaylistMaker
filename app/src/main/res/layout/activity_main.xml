@@ -14,18 +14,29 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="15dp"
+            android:text="@string/playlist_maker"
+            android:textColor="@color/white"
+            android:textSize="@dimen/main_text_size" />
+
         <Button
             android:id="@+id/buttonSearch"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:layout_margin="@dimen/button_margin"
             android:backgroundTint="@color/white"
             android:text="@string/button_search"
             android:textColor="@color/black"
-            app:cornerRadius="20dp"
+            android:textSize="@dimen/main_text_size"
+            app:cornerRadius="@dimen/main_button_cornerRadius"
             app:icon="@drawable/ic_search"
             app:iconGravity="textStart"
-            app:iconPadding="10dp"
+            app:iconPadding="@dimen/icon_padding"
             app:iconTint="@color/black" />
 
         <Button
@@ -34,12 +45,14 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:backgroundTint="@color/white"
+            android:layout_margin="@dimen/button_margin"
             android:text="@string/button_media"
             android:textColor="@color/black"
-            app:cornerRadius="20dp"
+            android:textSize="@dimen/main_text_size"
+            app:cornerRadius="@dimen/main_button_cornerRadius"
             app:icon="@drawable/ic_media"
             app:iconGravity="textStart"
-            app:iconPadding="10dp"
+            app:iconPadding="@dimen/icon_padding"
             app:iconTint="@color/black" />
 
         <Button
@@ -48,12 +61,14 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:backgroundTint="@color/white"
+            android:layout_margin="@dimen/button_margin"
             android:text="@string/button_settings"
             android:textColor="@color/black"
-            app:cornerRadius="20dp"
+            android:textSize="@dimen/main_text_size"
+            app:cornerRadius="@dimen/main_button_cornerRadius"
             app:icon="@drawable/ic_settings"
             app:iconGravity="textStart"
-            app:iconPadding="10dp"
+            app:iconPadding="@dimen/icon_padding"
             app:iconTint="@color/black" />
 
     </LinearLayout>
