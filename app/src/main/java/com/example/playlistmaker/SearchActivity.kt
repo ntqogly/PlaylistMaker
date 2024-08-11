@@ -6,7 +6,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -19,7 +18,7 @@ class SearchActivity : AppCompatActivity() {
 
     private var restoredText = ""
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,7 +29,7 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        val backButton = findViewById<ImageView>(R.id.back_Button).setOnClickListener { finish() }
+        val backButton = findViewById<ImageView>(R.id.back_button_from_search).setOnClickListener { finish() }
 
         val etSearch = findViewById<EditText>(R.id.et_search)
         if (savedInstanceState != null) {

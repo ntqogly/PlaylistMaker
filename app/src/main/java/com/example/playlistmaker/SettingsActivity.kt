@@ -1,13 +1,17 @@
 package com.example.playlistmaker
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class SettingsActivity : AppCompatActivity() {
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -15,6 +19,7 @@ class SettingsActivity : AppCompatActivity() {
         shareApp()
         contactSupport()
         checkTermsOfUse()
+        val backButton = findViewById<Button>(R.id.back_button_from_settings).setOnClickListener { finish() }
     }
 
     private fun checkTermsOfUse() {
@@ -35,7 +40,7 @@ class SettingsActivity : AppCompatActivity() {
 
             val supportIntent = Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:")
-                putExtra(Intent.EXTRA_EMAIL, email)
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(email) )
                 putExtra(Intent.EXTRA_SUBJECT, message)
                 putExtra(Intent.EXTRA_TEXT, body)
             }
@@ -56,3 +61,4 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 }
+
