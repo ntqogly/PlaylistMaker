@@ -5,8 +5,13 @@
         <item name="android:background">@color/mainLayout_background</item>
     </style>
 
-    <style name="settingsLayoutBackground">
+    <style name="settingsAndSearchLayoutBackground">
         <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="searchLayoutHeader">
+        <item name="backgroundTint">@color/empty</item>
+        <item name="tint">@color/black</item>
     </style>
 
     <style name="MainButtonsStyle">
@@ -33,6 +38,7 @@
 
     <style name="settings_layout_text_style">
         <item name="android:layout_width">match_parent</item>
+        <item name="hintTextColor">@color/et_hint_back_color</item>
         <item name="android:layout_height">@dimen/settings_layout_height</item>
         <item name="android:layout_marginStart">@dimen/settings_text_view_margin_start</item>
         <item name="android:layout_marginEnd">@dimen/settings_layout_padding_end</item>
@@ -43,19 +49,31 @@
         <item name="android:textSize">@dimen/layout_settings_text_size</item>
     </style>
 
-    <style name="settings_layout_header_button_style">
+    <style name="search_layout_editText_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="drawableTint">@color/grey_text</item>
+        <item name="backgroundTint">@color/empty</item>
+        <item name="android:textColorHint">@color/grey_text</item>
+        <item name="android:layout_height">@dimen/settings_layout_height</item>
+        <item name="android:layout_marginStart">@dimen/main_button_cornerRadius</item>
+        <item name="android:layout_marginEnd">@dimen/main_button_cornerRadius</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">@dimen/layout_settings_text_size</item>
+    </style>
+
+    <style name="header_button_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="backgroundTint">@color/white</item>
-        <item name="fontFamily">@font/ys_text_regular</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
         <item name="paddingStart">1dp</item>
         <item name="android:textAlignment">textStart</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/main_text_size</item>
         <item name="iconTint">@color/black</item>
     </style>
-
-
 
 
 </resources>

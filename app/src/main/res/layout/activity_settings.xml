@@ -16,8 +16,8 @@
 
         <Button
             android:id="@+id/buttonSettings"
-            style="@style/settings_layout_header_button_style"
-            android:text="@string/button_settingsLayout"
+            style="@style/header_button_style"
+            android:text="@string/button_settings"
             app:icon="@drawable/ic_arrow_back" />
     </LinearLayout>
 
