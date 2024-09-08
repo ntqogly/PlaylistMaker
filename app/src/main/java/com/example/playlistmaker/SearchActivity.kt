@@ -13,10 +13,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class SearchActivity : AppCompatActivity() {
 
     private var restoredText = ""
+    private val trackList = TrackList()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +32,8 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        val backButton = findViewById<ImageView>(R.id.back_button_from_search).setOnClickListener { finish() }
+        val backButton =
+            findViewById<ImageView>(R.id.back_button_from_search).setOnClickListener { finish() }
 
         val etSearch = findViewById<EditText>(R.id.et_search)
         if (savedInstanceState != null) {
@@ -56,7 +60,13 @@ class SearchActivity : AppCompatActivity() {
 //                TODO("Not yet implemented")
             }
         })
+
+        val rvTrack = findViewById<RecyclerView>(R.id.recycler_list)
+        rvTrack.layoutManager = LinearLayoutManager(this)
+        rvTrack.adapter = TrackAdapter(trackList.track)
+
     }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
