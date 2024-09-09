@@ -39,7 +39,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            style="@style/searchLayoutLupa"
+            style="@style/search_layout_lupa"
             android:layout_width="14dp"
             android:layout_height="14dp"
             android:layout_marginStart="12dp"
@@ -71,7 +71,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_list"
+        android:id="@+id/rv_tracks"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

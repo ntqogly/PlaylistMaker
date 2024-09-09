@@ -9,7 +9,7 @@
         <item name="android:background">@color/black</item>
     </style>
 
-    <style name="searchLayoutLupa">
+    <style name="search_layout_lupa">
         <item name="tint">@color/black</item>
     </style>
 
