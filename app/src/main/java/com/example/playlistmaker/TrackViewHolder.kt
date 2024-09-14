@@ -14,7 +14,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         with(binding) {
             trackName.text = model.trackName
             artistName.text = model.artistName
-            trackTime.text = model.trackTime
+            trackTime.text = model.trackTimeMillis
             Glide.with(itemView).load(model.artworkUrl100).centerCrop()
                 .transform(RoundedCorners(10))
                 .placeholder(R.drawable.ic_place_holder).into(trackImage)
