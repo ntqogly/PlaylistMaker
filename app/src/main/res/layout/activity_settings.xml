@@ -22,7 +22,7 @@
     </LinearLayout>
 
     <Switch
-        android:id="@+id/switchTheme"
+        android:id="@+id/switch_theme"
         style="@style/settings_layout_text_style"
         android:fontFamily="@font/ys_display_regular"
         android:text="@string/switcher_settingsLayout"
