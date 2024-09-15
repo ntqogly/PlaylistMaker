@@ -36,7 +36,9 @@
         android:layout_marginEnd="@dimen/main_button_cornerRadius"
         android:background="@drawable/shape_et"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:imeOptions="actionDone"
+        android:orientation="horizontal"
+        android:singleLine="true">
 
         <ImageView
             style="@style/search_layout_lupa"
@@ -78,7 +80,7 @@
         android:layout_marginTop="102dp"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
