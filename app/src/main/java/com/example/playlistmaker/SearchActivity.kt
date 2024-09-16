@@ -27,7 +27,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private val trackAdapter = TrackAdapter()
 
-    @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -63,7 +62,6 @@ class SearchActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             binding.etSearch.setText(restoredText)
         }
-//        loadTrack()
     }
 
     private fun changeListener() {
@@ -102,11 +100,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun loadTrack() {
-        ApiFactory.getApiService().search(binding.etSearch.text.toString())
+        ApiFactory.apiService.search(binding.etSearch.text.toString())
             .enqueue(object : Callback<TrackResponse> {
-                @SuppressLint("NotifyDataSetChanged")
                 override fun onResponse(
-                    p0: Call<TrackResponse>, response: Response<TrackResponse>
+                    call: Call<TrackResponse>, response: Response<TrackResponse>
                 ) {
                     if (response.isSuccessful) {
                         showTrackList()
