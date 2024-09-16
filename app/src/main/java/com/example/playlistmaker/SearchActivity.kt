@@ -25,6 +25,7 @@ class SearchActivity : AppCompatActivity() {
     private var restoredText = ""
     private val trackList = ArrayList<Track>()
     private lateinit var binding: ActivitySearchBinding
+    private val trackAdapter = TrackAdapter()
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,30 +39,31 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
         binding.backButtonFromSearch.setOnClickListener { finish() }
-
-        if (savedInstanceState != null) {
-            binding.etSearch.setText(restoredText)
-        }
-
-        loadTrack()
-
-        changeListener()
-
-        refreshButton()
-        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loadTrack()
-            }
-            false
-        }
         binding.clearImageButton.setOnClickListener {
             binding.etSearch.setText("")
             hideKeyboard()
-            trackList.clear()
+            binding.rvTracks.visibility = View.GONE
         }
-        binding.rvTracks.layoutManager = LinearLayoutManager(this)
-        binding.rvTracks.adapter = TrackAdapter(trackList)
+        refreshButton()
 
+        binding.rvTracks.layoutManager = LinearLayoutManager(this)
+        trackAdapter.tracks = trackList
+        binding.rvTracks.adapter = trackAdapter
+
+        changeListener()
+        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                loadTrack()
+                hideKeyboard()
+                true
+            } else {
+                false
+            }
+        }
+        if (savedInstanceState != null) {
+            binding.etSearch.setText(restoredText)
+        }
+//        loadTrack()
     }
 
     private fun changeListener() {
@@ -104,42 +106,51 @@ class SearchActivity : AppCompatActivity() {
             .enqueue(object : Callback<TrackResponse> {
                 @SuppressLint("NotifyDataSetChanged")
                 override fun onResponse(
-                    call: Call<TrackResponse>, response: Response<TrackResponse>
+                    p0: Call<TrackResponse>, response: Response<TrackResponse>
                 ) {
                     if (response.isSuccessful) {
-                        with(binding) {
-                            linearLayoutSearch.visibility = View.GONE
-                            linearLayoutInternet.visibility = View.GONE
-                            rvTracks.visibility = View.VISIBLE
-                        }
+                        showTrackList()
                         trackList.clear()
-                        val resultResponse = response.body()?.results
-                        if (resultResponse?.isNotEmpty() == true) {
-                            trackList.addAll(resultResponse)
-                            TrackAdapter(trackList).notifyDataSetChanged()
+                        val resultsResponse = response.body()?.results
+                        if (resultsResponse?.isNotEmpty() == true) {
+                            trackList.addAll(resultsResponse)
+                            trackAdapter.notifyDataSetChanged()
                         } else {
-                            with(binding) {
-                                linearLayoutSearch.visibility = View.VISIBLE
-                                linearLayoutInternet.visibility = View.GONE
-                                rvTracks.visibility = View.GONE
-                            }
+                            nothingFound()
                         }
                     } else {
-                        with(binding) {
-                            linearLayoutSearch.visibility = View.GONE
-                            linearLayoutInternet.visibility = View.VISIBLE
-                            rvTracks.visibility = View.GONE
-                        }
+                        noInternet()
                     }
                 }
+
                 override fun onFailure(p0: Call<TrackResponse>, p1: Throwable) {
-                    with(binding) {
-                        linearLayoutSearch.visibility = View.GONE
-                        linearLayoutInternet.visibility = View.VISIBLE
-                        rvTracks.visibility = View.GONE
-                    }
+                    noInternet()
                 }
             })
+    }
+
+    private fun showTrackList() {
+        with(binding) {
+            linearLayoutSearch.visibility = View.GONE
+            linearLayoutInternet.visibility = View.GONE
+            rvTracks.visibility = View.VISIBLE
+        }
+    }
+
+    private fun noInternet() {
+        with(binding) {
+            linearLayoutSearch.visibility = View.GONE
+            linearLayoutInternet.visibility = View.VISIBLE
+            rvTracks.visibility = View.GONE
+        }
+    }
+
+    private fun nothingFound() {
+        with(binding) {
+            linearLayoutSearch.visibility = View.VISIBLE
+            linearLayoutInternet.visibility = View.GONE
+            rvTracks.visibility = View.GONE
+        }
     }
 
     private fun refreshButton() {
