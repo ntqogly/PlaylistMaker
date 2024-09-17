@@ -19,6 +19,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             artistName.text = model.artistName
             trackTime.text =
                 SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
+
             Glide.with(itemView).load(model.artworkUrl100).centerCrop()
                 .transform(RoundedCorners(10)).placeholder(R.drawable.ic_place_holder)
                 .into(trackImage)

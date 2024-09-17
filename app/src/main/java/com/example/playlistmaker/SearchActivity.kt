@@ -37,19 +37,20 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        binding.backButtonFromSearch.setOnClickListener { finish() }
-        binding.clearImageButton.setOnClickListener {
-            binding.etSearch.setText("")
-            hideKeyboard()
-            binding.rvTracks.visibility = View.GONE
-        }
-        refreshButton()
 
         binding.rvTracks.layoutManager = LinearLayoutManager(this)
         trackAdapter.tracks = trackList
         binding.rvTracks.adapter = trackAdapter
 
+        binding.backButtonFromSearch.setOnClickListener { finish() }
+        binding.clearImageButton.setOnClickListener {
+            binding.etSearch.setText("")
+            hideKeyboard()
+            trackList.clear()
+            trackAdapter.notifyDataSetChanged()
+        }
         changeListener()
+        refreshButton()
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 loadTrack()
@@ -58,9 +59,6 @@ class SearchActivity : AppCompatActivity() {
             } else {
                 false
             }
-        }
-        if (savedInstanceState != null) {
-            binding.etSearch.setText(restoredText)
         }
     }
 
@@ -106,12 +104,11 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TrackResponse>, response: Response<TrackResponse>
                 ) {
                     if (response.isSuccessful) {
-                        showTrackList()
                         trackList.clear()
-                        val resultsResponse = response.body()?.results
-                        if (resultsResponse?.isNotEmpty() == true) {
-                            trackList.addAll(resultsResponse)
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            trackList.addAll(response.body()?.results!!)
                             trackAdapter.notifyDataSetChanged()
+                            showTrackList()
                         } else {
                             nothingFound()
                         }
