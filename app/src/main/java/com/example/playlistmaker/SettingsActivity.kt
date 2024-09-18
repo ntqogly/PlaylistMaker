@@ -21,6 +21,7 @@ class SettingsActivity : AppCompatActivity() {
         shareApp()
         contactSupport()
         checkTermsOfUse()
+        theme()
         binding.backButtonFromSettings.setOnClickListener { finish() }
     }
 
@@ -59,5 +60,13 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(shareIntent)
         }
     }
+
+    private fun theme() {
+        binding.switchTheme.setOnCheckedChangeListener { buttonView, isChecked ->
+            (applicationContext as App).switchTheme(isChecked)
+        }
+
+    }
+
 }
 
