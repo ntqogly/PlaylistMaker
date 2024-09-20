@@ -124,12 +124,46 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_tracks"
+    <LinearLayout
+        android:id="@+id/linear_layout_history"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="16dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/track_list_item" />
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_search_history"
+            style="@style/tv_search_history_style"
+            android:layout_gravity="center"
+            android:text="@string/searched"
+            android:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_tracks"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingTop="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/track_list_item"
+            tools:visibility="gone" />
+
+        <Button
+            android:id="@+id/clear_hist_button"
+            style="@style/clear_hist_button_style"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:text="@string/clear_history" />
+
+    </LinearLayout>
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/rv_tracks"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:paddingTop="16dp"-->
+<!--        android:visibility="gone"-->
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--        tools:listitem="@layout/track_list_item" />-->
 
 </LinearLayout>

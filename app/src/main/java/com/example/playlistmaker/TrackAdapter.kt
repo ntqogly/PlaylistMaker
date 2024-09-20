@@ -5,8 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.models.Track
 
-class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
-    var tracks = ArrayList<Track>()
+class TrackAdapter(private var tracks: List<Track> = emptyList(), var onAddTrack: (Track) -> Unit = {}) : RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view =
@@ -19,5 +18,10 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     }
 
     override fun getItemCount(): Int = tracks.size
+
+    fun refreshTrackList(newTracks: List<Track>) {
+        tracks = newTracks
+        notifyDataSetChanged()
+    }
 
 }

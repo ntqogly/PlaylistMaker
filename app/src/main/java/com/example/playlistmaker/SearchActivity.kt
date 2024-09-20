@@ -25,7 +25,7 @@ class SearchActivity : AppCompatActivity() {
     private var restoredText = ""
     private val trackList = ArrayList<Track>()
     private lateinit var binding: ActivitySearchBinding
-    private val trackAdapter = TrackAdapter()
+    private val trackAdapter = TrackAdapter(trackList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,6 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.rvTracks.layoutManager = LinearLayoutManager(this)
-        trackAdapter.tracks = trackList
         binding.rvTracks.adapter = trackAdapter
 
         binding.backButtonFromSearch.setOnClickListener { finish() }
@@ -47,10 +46,11 @@ class SearchActivity : AppCompatActivity() {
             binding.etSearch.setText("")
             hideKeyboard()
             trackList.clear()
+
             trackAdapter.notifyDataSetChanged()
         }
         changeListener()
-        refreshButton()
+        refreshButton() //+
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 loadTrack()
@@ -60,6 +60,8 @@ class SearchActivity : AppCompatActivity() {
                 false
             }
         }
+
+
     }
 
     private fun changeListener() {
