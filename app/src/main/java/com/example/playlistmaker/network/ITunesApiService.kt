@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface ITunesApiService {
 
     @GET("/search?entity=song")
-    fun search(@Query(PARAM_NAME) text: String): Call<TrackResponse>
+    fun search(@Query(PARAM_NAME) text: String) :Call<TrackResponse>
 
     companion object {
         private const val PARAM_NAME = "term"
