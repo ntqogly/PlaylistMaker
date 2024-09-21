@@ -1,6 +1,5 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,7 +24,8 @@ class SearchActivity : AppCompatActivity() {
     private var restoredText = ""
     private val trackList = ArrayList<Track>()
     private lateinit var binding: ActivitySearchBinding
-    private val trackAdapter = TrackAdapter()
+    private lateinit var trackAdapter: TrackAdapter
+    private lateinit var searchHistory: SearchHistory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +38,18 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        binding.rvTracks.layoutManager = LinearLayoutManager(this)
-        trackAdapter.tracks = trackList
-        binding.rvTracks.adapter = trackAdapter
+        val sharedPreferences = getSharedPreferences("preferences", MODE_PRIVATE)
+        searchHistory = SearchHistory(sharedPreferences)
+
+        trackAdapter = TrackAdapter(trackList, searchHistory) { track ->
+            searchHistory.addTrack(track)
+//            loadSearchHistory()
+        }
+
+        setupTracksRecyclerView()
+        setupHistoryRecyclerView()
+        setupListeners()
+        loadSearchHistory()
 
         binding.backButtonFromSearch.setOnClickListener { finish() }
         binding.clearImageButton.setOnClickListener {
@@ -48,6 +57,7 @@ class SearchActivity : AppCompatActivity() {
             hideKeyboard()
             trackList.clear()
             trackAdapter.notifyDataSetChanged()
+            loadSearchHistory()
         }
         changeListener()
         refreshButton()
@@ -62,21 +72,54 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadSearchHistory() {
+        val history = searchHistory.getHistory()
+        if (history.isNotEmpty()) {
+            binding.linearLayoutHistory.visibility = View.VISIBLE
+            binding.rvHistoryTracks.visibility = View.VISIBLE
+            trackAdapter.updateTracks(history)
+        } else {
+            binding.linearLayoutHistory.visibility = View.GONE
+            binding.rvHistoryTracks.visibility = View.GONE
+        }
+        binding.rvHistoryTracks.adapter?.notifyDataSetChanged()
+        binding.rvTracks.visibility = View.GONE
+    }
+
+    private fun setupListeners() {
+        binding.clearHistButton.setOnClickListener {
+            searchHistory.clearHistory()
+            loadSearchHistory()
+        }
+    }
+
+    private fun setupTracksRecyclerView() {
+        binding.rvTracks.layoutManager = LinearLayoutManager(this)
+        binding.rvTracks.adapter = trackAdapter
+    }
+
+    private fun setupHistoryRecyclerView() {
+        binding.rvHistoryTracks.layoutManager = LinearLayoutManager(this)
+        binding.rvHistoryTracks.adapter = trackAdapter
+    }
+
+
     private fun changeListener() {
         binding.etSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //                TODO("Not yet implemented")
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.clearImageButton.visibility =
-                    if (s.isNullOrEmpty()) View.INVISIBLE else View.VISIBLE
+                if (s.isNullOrEmpty()) {
+                    loadSearchHistory()
+                    binding.clearImageButton.visibility = View.INVISIBLE
+                } else {
+                    binding.clearImageButton.visibility = View.VISIBLE
+                    binding.linearLayoutHistory.visibility = View.GONE
+                }
                 restoredText = binding.etSearch.text.toString()
             }
 
-            override fun afterTextChanged(s: Editable?) {
-                //                TODO("Not yet implemented")
-            }
+            override fun afterTextChanged(s: Editable?) {}
         })
     }
 
@@ -104,9 +147,9 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TrackResponse>, response: Response<TrackResponse>
                 ) {
                     if (response.isSuccessful) {
-                        trackList.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            trackList.addAll(response.body()?.results!!)
+                        val tracks = response.body()?.results ?: emptyList()
+                        if (tracks.isNotEmpty()) {
+                            trackAdapter.updateTracks(tracks)
                             trackAdapter.notifyDataSetChanged()
                             showTrackList()
                         } else {
@@ -127,6 +170,7 @@ class SearchActivity : AppCompatActivity() {
         with(binding) {
             linearLayoutSearch.visibility = View.GONE
             linearLayoutInternet.visibility = View.GONE
+            binding.linearLayoutHistory.visibility = View.GONE
             rvTracks.visibility = View.VISIBLE
         }
     }
@@ -135,6 +179,7 @@ class SearchActivity : AppCompatActivity() {
         with(binding) {
             linearLayoutSearch.visibility = View.GONE
             linearLayoutInternet.visibility = View.VISIBLE
+            binding.linearLayoutHistory.visibility = View.GONE
             rvTracks.visibility = View.GONE
         }
     }
@@ -143,9 +188,18 @@ class SearchActivity : AppCompatActivity() {
         with(binding) {
             linearLayoutSearch.visibility = View.VISIBLE
             linearLayoutInternet.visibility = View.GONE
+            binding.linearLayoutHistory.visibility = View.GONE
             rvTracks.visibility = View.GONE
         }
     }
+//    private fun showHistoryList() {
+//        with(binding) {
+//            linearLayoutSearch.visibility = View.GONE
+//            linearLayoutInternet.visibility = View.GONE
+//            binding.linearLayoutHistory.visibility = View.VISIBLE
+//            rvTracks.visibility = View.GONE
+//        }
+//    }
 
     private fun refreshButton() {
         binding.refreshButton.setOnClickListener {

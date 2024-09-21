@@ -2,14 +2,17 @@ package com.example.playlistmaker
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
+    private lateinit var sharedPreferences: SharedPreferences
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,10 +21,27 @@ class SettingsActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sharedPreferences = getSharedPreferences("preferences", MODE_PRIVATE)
+        val isDarkMode = sharedPreferences.getBoolean("is_dark_mode", false)
+        binding.switchTheme.isChecked = isDarkMode
+
         shareApp()
         contactSupport()
         checkTermsOfUse()
+        switchTheme()
         binding.backButtonFromSettings.setOnClickListener { finish() }
+    }
+
+    private fun switchTheme() {
+        binding.switchTheme.setOnCheckedChangeListener { _, isChecked ->
+            sharedPreferences.edit().putBoolean("is_dark_mode", isChecked).apply()
+
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
     }
 
     private fun checkTermsOfUse() {
@@ -59,5 +79,6 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(shareIntent)
         }
     }
+
 }
 
