@@ -3,6 +3,7 @@
     <color name="black">#1A1B22</color>
     <color name="white">#FFFFFFFF</color>
     <color name="mainLayout_background">#3772E7</color>
+    <color name="blue">#9FBBF3</color>
     <color name="grey">#E6E8EB</color>
     <color name="empty">#00FFFFFF</color>
     <color name="et_hint_back_color">#AEAFB4</color>
