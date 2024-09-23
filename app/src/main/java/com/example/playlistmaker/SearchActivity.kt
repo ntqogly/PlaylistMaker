@@ -43,7 +43,6 @@ class SearchActivity : AppCompatActivity() {
 
         trackAdapter = TrackAdapter(trackList, searchHistory) { track ->
             searchHistory.addTrack(track)
-//            loadSearchHistory()
         }
 
         setupTracksRecyclerView()
@@ -192,14 +191,6 @@ class SearchActivity : AppCompatActivity() {
             rvTracks.visibility = View.GONE
         }
     }
-//    private fun showHistoryList() {
-//        with(binding) {
-//            linearLayoutSearch.visibility = View.GONE
-//            linearLayoutInternet.visibility = View.GONE
-//            binding.linearLayoutHistory.visibility = View.VISIBLE
-//            rvTracks.visibility = View.GONE
-//        }
-//    }
 
     private fun refreshButton() {
         binding.refreshButton.setOnClickListener {
