@@ -68,5 +68,4 @@
         style="@style/settings_layout_text_style"
         android:text="@string/termsOfUse"
         app:drawableEndCompat="@drawable/ic_terms_of_use" />
-
 </LinearLayout>
