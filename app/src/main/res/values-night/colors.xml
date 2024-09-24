@@ -8,5 +8,5 @@
     <color name="empty">#00FFFFFF</color>
     <color name="et_hint_back_color">#AEAFB4</color>
     <color name="grey_text">#AEAFB4</color>
-    <color name="arrow_back_color">#1A1B22</color>
+    <color name="arrow_back_color">#FFFFFFFF</color>
 </resources>

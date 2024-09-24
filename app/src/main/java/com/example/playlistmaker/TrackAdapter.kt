@@ -19,17 +19,6 @@ class TrackAdapter(
         return TrackViewHolder(view)
     }
 
-//    @SuppressLint("NotifyDataSetChanged")
-//    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-//        val track = tracks[position]
-//        holder.bind(track)
-//
-//        holder.itemView.setOnClickListener {
-//            onTrackClick(track)
-//            notifyDataSetChanged()
-//        }
-//    }
-
     @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         val track = tracks[position]
@@ -38,7 +27,6 @@ class TrackAdapter(
         holder.itemView.setOnClickListener {
             onTrackClick(track)
 
-            // Переход на PlayerActivity
             val context = holder.itemView.context
             val intent = Intent(context, PlayerActivity::class.java).apply {
                 putExtra("track", track)
@@ -53,8 +41,7 @@ class TrackAdapter(
                 putExtra("releaseDate", track.releaseDate)
             }
             context.startActivity(intent)
-
-            notifyDataSetChanged() // Обновление списка после клика, если необходимо
+            notifyDataSetChanged()
         }
     }
 
