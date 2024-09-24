@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,17 @@ class TrackAdapter(
         return TrackViewHolder(view)
     }
 
+//    @SuppressLint("NotifyDataSetChanged")
+//    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
+//        val track = tracks[position]
+//        holder.bind(track)
+//
+//        holder.itemView.setOnClickListener {
+//            onTrackClick(track)
+//            notifyDataSetChanged()
+//        }
+//    }
+
     @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         val track = tracks[position]
@@ -25,9 +37,27 @@ class TrackAdapter(
 
         holder.itemView.setOnClickListener {
             onTrackClick(track)
-            notifyDataSetChanged()
+
+            // Переход на PlayerActivity
+            val context = holder.itemView.context
+            val intent = Intent(context, PlayerActivity::class.java).apply {
+                putExtra("track", track)
+                putExtra("trackId", track.trackId)
+                putExtra("trackName", track.trackName)
+                putExtra("artistName", track.artistName)
+                putExtra("trackTimeMillis", track.trackTimeMillis)
+                putExtra("artworkUrl100", track.artworkUrl100)
+                putExtra("trackCountry", track.trackCountry)
+                putExtra("trackAlbum", track.trackAlbum)
+                putExtra("genre", track.genre)
+                putExtra("releaseDate", track.releaseDate)
+            }
+            context.startActivity(intent)
+
+            notifyDataSetChanged() // Обновление списка после клика, если необходимо
         }
     }
+
 
     override fun getItemCount(): Int {
         return tracks.size
