@@ -8,10 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.models.Track
 
 class TrackAdapter(
-    private var tracks: List<Track>,
+    private var tracks: MutableList<Track>,
     private val searchHistory: SearchHistory,
     private val onTrackClick: (Track) -> Unit
 ) : RecyclerView.Adapter<TrackViewHolder>() {
+
+    private fun moveTrackToTop(track: Track) {
+        tracks.remove(track)
+        tracks.add(0, track)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view =
@@ -19,13 +25,13 @@ class TrackAdapter(
         return TrackViewHolder(view)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         val track = tracks[position]
         holder.bind(track)
 
         holder.itemView.setOnClickListener {
             onTrackClick(track)
+            moveTrackToTop(track)
 
             val context = holder.itemView.context
             val intent = Intent(context, PlayerActivity::class.java).apply {
@@ -51,7 +57,7 @@ class TrackAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateTracks(newTracks: List<Track>) {
-        tracks = newTracks
+        tracks = newTracks.toMutableList()
         notifyDataSetChanged()
     }
 }

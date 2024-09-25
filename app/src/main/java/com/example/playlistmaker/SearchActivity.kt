@@ -44,7 +44,6 @@ class SearchActivity : AppCompatActivity() {
 
         trackAdapter = TrackAdapter(trackList, searchHistory) { track ->
             searchHistory.addTrack(track)
-//            loadSearchHistory()
         }
 
         setupTracksRecyclerView()
