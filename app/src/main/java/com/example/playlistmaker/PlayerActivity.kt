@@ -39,7 +39,7 @@ class PlayerActivity : AppCompatActivity() {
             with(binding) {
                 tvTrackName.text = it.trackName
                 tvArtistName.text = it.artistName
-                tvDuration.text = millisToMinutesAndSeconds(it.trackTimeMillis)
+                trackDuration.text = millisToMinutesAndSeconds(it.trackTimeMillis)
                 trackAlbum.text = it.trackAlbum
                 trackReleaseDate.text = it.releaseDate.substring(0, 4)
                 trackGenre.text = it.genre
@@ -48,7 +48,10 @@ class PlayerActivity : AppCompatActivity() {
             Glide.with(this).load(it.artworkUrl100).into(binding.trackCover)
         }
 
-        Glide.with(this).load(coverResolutionAmplifier()).centerCrop().transform(RoundedCorners(2))
+        Glide.with(this)
+            .load(coverResolutionAmplifier())
+            .centerCrop()
+            .transform(RoundedCorners(10))
             .placeholder(R.drawable.ic_place_holder).into(binding.trackCover)
     }
 

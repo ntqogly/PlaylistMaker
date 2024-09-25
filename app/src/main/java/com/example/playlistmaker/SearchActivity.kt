@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -112,6 +113,7 @@ class SearchActivity : AppCompatActivity() {
                 if (s.isNullOrEmpty()) {
                     loadSearchHistory()
                     binding.clearImageButton.visibility = View.INVISIBLE
+                    binding.linearLayoutSearch.visibility = View.GONE
                 } else {
                     binding.clearImageButton.visibility = View.VISIBLE
                     binding.linearLayoutHistory.visibility = View.GONE
@@ -122,6 +124,7 @@ class SearchActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
     }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

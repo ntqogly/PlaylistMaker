@@ -41,7 +41,6 @@ class TrackAdapter(
                 putExtra("releaseDate", track.releaseDate)
             }
             context.startActivity(intent)
-            notifyDataSetChanged()
         }
     }
 
