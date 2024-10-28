@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -43,7 +44,6 @@ class SearchActivity : AppCompatActivity() {
 
         trackAdapter = TrackAdapter(trackList, searchHistory) { track ->
             searchHistory.addTrack(track)
-//            loadSearchHistory()
         }
 
         setupTracksRecyclerView()
@@ -112,6 +112,7 @@ class SearchActivity : AppCompatActivity() {
                 if (s.isNullOrEmpty()) {
                     loadSearchHistory()
                     binding.clearImageButton.visibility = View.INVISIBLE
+                    binding.linearLayoutSearch.visibility = View.GONE
                 } else {
                     binding.clearImageButton.visibility = View.VISIBLE
                     binding.linearLayoutHistory.visibility = View.GONE
@@ -122,6 +123,7 @@ class SearchActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
     }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -192,14 +194,6 @@ class SearchActivity : AppCompatActivity() {
             rvTracks.visibility = View.GONE
         }
     }
-//    private fun showHistoryList() {
-//        with(binding) {
-//            linearLayoutSearch.visibility = View.GONE
-//            linearLayoutInternet.visibility = View.GONE
-//            binding.linearLayoutHistory.visibility = View.VISIBLE
-//            rvTracks.visibility = View.GONE
-//        }
-//    }
 
     private fun refreshButton() {
         binding.refreshButton.setOnClickListener {
