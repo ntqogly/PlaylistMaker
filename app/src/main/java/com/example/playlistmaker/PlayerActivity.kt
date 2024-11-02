@@ -1,19 +1,14 @@
 package com.example.playlistmaker
 
-import android.content.res.Configuration
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.models.Track
 
 class PlayerActivity : AppCompatActivity() {
@@ -33,7 +28,7 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.tbPlayer.setNavigationOnClickListener { finish() }
 
-        val track = intent.getParcelableExtra<Track>("track")
+        val track = IntentCompat.getParcelableExtra(intent, "track", Track::class.java)
 
         track?.let {
             with(binding) {

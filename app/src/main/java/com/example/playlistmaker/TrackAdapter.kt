@@ -36,15 +36,7 @@ class TrackAdapter(
             val context = holder.itemView.context
             val intent = Intent(context, PlayerActivity::class.java).apply {
                 putExtra("track", track)
-                putExtra("trackId", track.trackId)
-                putExtra("trackName", track.trackName)
-                putExtra("artistName", track.artistName)
-                putExtra("trackTimeMillis", track.trackTimeMillis)
                 putExtra("artworkUrl100", track.artworkUrl100)
-                putExtra("trackCountry", track.trackCountry)
-                putExtra("trackAlbum", track.trackAlbum)
-                putExtra("genre", track.genre)
-                putExtra("releaseDate", track.releaseDate)
             }
             context.startActivity(intent)
         }
