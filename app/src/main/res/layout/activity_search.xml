@@ -166,4 +166,15 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/track_list_item" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar_search"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="248dp"
+        android:visibility="gone"
+        android:layout_marginBottom="508dp"
+        android:layout_marginStart="158dp"
+        android:layout_marginEnd="158dp" />
+
 </LinearLayout>

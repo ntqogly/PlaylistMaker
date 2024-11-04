@@ -2,6 +2,8 @@ package com.example.playlistmaker
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -27,6 +29,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var searchHistory: SearchHistory
+    private var mainThreadHandler: Handler? = null
+    private var searchRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +42,7 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        mainThreadHandler = Handler(Looper.getMainLooper())
 
         val sharedPreferences = getSharedPreferences("preferences", MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPreferences)
@@ -116,6 +121,10 @@ class SearchActivity : AppCompatActivity() {
                 } else {
                     binding.clearImageButton.visibility = View.VISIBLE
                     binding.linearLayoutHistory.visibility = View.GONE
+
+                    searchRunnable?.let { mainThreadHandler?.removeCallbacks(it) }
+                    searchRunnable = Runnable { loadTrack() }
+                    mainThreadHandler?.postDelayed(searchRunnable!!, 2000)
                 }
                 restoredText = binding.etSearch.text.toString()
             }
@@ -143,11 +152,13 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun loadTrack() {
+        binding.progressBarSearch.visibility = View.VISIBLE
         ApiFactory.apiService.search(binding.etSearch.text.toString())
             .enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
                     call: Call<TrackResponse>, response: Response<TrackResponse>
                 ) {
+                    binding.progressBarSearch.visibility = View.GONE
                     if (response.isSuccessful) {
                         val tracks = response.body()?.results ?: emptyList()
                         if (tracks.isNotEmpty()) {
