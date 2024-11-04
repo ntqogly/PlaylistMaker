@@ -38,6 +38,10 @@ class PlayerActivity : AppCompatActivity() {
         val track = IntentCompat.getParcelableExtra(intent, "track", Track::class.java)
 
         track?.let {
+            val previewUrl = it.previewUrl
+            if (previewUrl.isNotEmpty()) {
+                setupMediaPlayer(previewUrl)
+            }
             setupMediaPlayer(it.previewUrl)
             with(binding) {
                 tvTrackName.text = it.trackName
