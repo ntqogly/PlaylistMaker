@@ -58,6 +58,7 @@ class PlayerActivity : AppCompatActivity() {
         Glide.with(this).load(coverResolutionAmplifier()).centerCrop().transform(RoundedCorners(10))
             .placeholder(R.drawable.ic_place_holder).into(binding.trackCover)
     }
+
     private fun togglePlayback() {
         if (isPlaying) {
             pausePlayback()

@@ -15,14 +15,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/empty"
-            android:theme="?attr/actionBarTheme"
             android:minHeight="?attr/actionBarSize"
-            app:navigationIconTint="@color/arrow_back_color"
+            android:theme="?attr/actionBarTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_arrow_back" />
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/arrow_back_color" />
 
         <ImageView
             android:id="@+id/track_cover"
@@ -108,10 +108,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:text="@string/_00_00"
             app:layout_constraintEnd_toEndOf="@+id/button_play_track"
             app:layout_constraintStart_toStartOf="@+id/button_play_track"
-            app:layout_constraintTop_toBottomOf="@+id/button_play_track"
-            android:text="@string/_00_00"  />
+            app:layout_constraintTop_toBottomOf="@+id/button_play_track" />
 
         <TextView
             android:id="@+id/tv_duration"
