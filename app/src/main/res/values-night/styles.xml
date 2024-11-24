@@ -200,4 +200,8 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
 
+    <style name="toolbar_arrow_style" parent="Widget.AppCompat.Toolbar">
+        <item name="navigationIconTint">@color/white</item>
+    </style>
+
 </resources>
