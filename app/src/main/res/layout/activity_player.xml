@@ -14,16 +14,12 @@
             android:id="@+id/tb_player"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="toolbar_arrow_style"
             android:background="@color/empty"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconTint="@color/arrow_back_color" />
+            app:navigationIcon="@drawable/ic_arrow_back" />
 
         <ImageView
             android:id="@+id/track_cover"

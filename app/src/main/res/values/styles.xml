@@ -213,8 +213,4 @@
         <item name="android:orientation">vertical</item>
     </style>
 
-    <style name="toolbar_arrow_style" parent="Widget.AppCompat.Toolbar">
-        <item name="navigationIconTint">@color/black</item>
-    </style>
-
 </resources>
