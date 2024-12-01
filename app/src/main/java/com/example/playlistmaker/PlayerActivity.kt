@@ -1,6 +1,9 @@
 package com.example.playlistmaker
 
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.IntentCompat
@@ -14,6 +17,9 @@ import com.example.playlistmaker.models.Track
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
+    private var mediaPlayer: MediaPlayer? = null
+    private var handler: Handler = Handler(Looper.getMainLooper())
+    private var isPlaying = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,10 +33,16 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.tbPlayer.setNavigationOnClickListener { finish() }
+        binding.buttonPlayTrack.setOnClickListener { togglePlayback() }
 
         val track = IntentCompat.getParcelableExtra(intent, "track", Track::class.java)
 
         track?.let {
+            val previewUrl = it.previewUrl
+            if (previewUrl.isNotEmpty()) {
+                setupMediaPlayer(previewUrl)
+            }
+            setupMediaPlayer(it.previewUrl)
             with(binding) {
                 tvTrackName.text = it.trackName
                 tvArtistName.text = it.artistName
@@ -43,11 +55,76 @@ class PlayerActivity : AppCompatActivity() {
             Glide.with(this).load(it.artworkUrl100).into(binding.trackCover)
         }
 
-        Glide.with(this)
-            .load(coverResolutionAmplifier())
-            .centerCrop()
-            .transform(RoundedCorners(10))
+        Glide.with(this).load(coverResolutionAmplifier()).centerCrop().transform(RoundedCorners(10))
             .placeholder(R.drawable.ic_place_holder).into(binding.trackCover)
+    }
+
+    private fun togglePlayback() {
+        if (isPlaying) {
+            pausePlayback()
+        } else {
+            startPlayback()
+        }
+    }
+
+    private fun setupMediaPlayer(previewUrl: String?) {
+        if (previewUrl.isNullOrEmpty()) return
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(previewUrl)
+            prepareAsync()
+            setOnPreparedListener {
+                binding.buttonPlayTrack.isEnabled = true
+            }
+            setOnCompletionListener {
+                pausePlayback()
+                binding.currentTime.text = millisToMinutesAndSeconds(0)
+            }
+        }
+    }
+
+    private fun startPlayback() {
+        mediaPlayer?.start()
+        isPlaying = true
+        binding.buttonPlayTrack.setImageResource(R.drawable.button_pause_track)
+        updatePlaybackTime()
+    }
+
+    private fun pausePlayback() {
+        mediaPlayer?.pause()
+        isPlaying = false
+        binding.buttonPlayTrack.setImageResource(R.drawable.button_play_track)
+        handler.removeCallbacks(updateTimeRunnable)
+    }
+
+    private fun updatePlaybackTime() {
+        handler.postDelayed(updateTimeRunnable, 1000)
+    }
+
+    override fun onBackPressed() {
+        releaseMediaPlayer()
+        super.onBackPressed()
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        releaseMediaPlayer()
+    }
+    private fun releaseMediaPlayer() {
+        mediaPlayer?.let {
+            if (it.isPlaying) it.stop()
+            it.release()
+        }
+        mediaPlayer = null
+        handler.removeCallbacks(updateTimeRunnable)
+    }
+
+    private val updateTimeRunnable = object : Runnable {
+        override fun run() {
+            mediaPlayer?.let {
+                val currentPosition = it.currentPosition
+                binding.currentTime.text = millisToMinutesAndSeconds(currentPosition)
+                if (isPlaying) handler.postDelayed(this, 1000)
+            }
+        }
     }
 
     private fun coverResolutionAmplifier(): String? {
