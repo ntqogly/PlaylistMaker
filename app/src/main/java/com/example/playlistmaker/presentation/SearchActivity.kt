@@ -215,7 +215,6 @@ class SearchActivity : AppCompatActivity() {
 
     private val searchTracksUseCase by lazy { Creator.provideSearchTrackUseCase() }
     private val searchHistoryUseCase by lazy { Creator.provideSearchHistoryUseCase(this) }
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

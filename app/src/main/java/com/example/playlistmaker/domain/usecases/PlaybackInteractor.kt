@@ -1,53 +1,64 @@
 package com.example.playlistmaker.domain.usecases
 
 import android.media.MediaPlayer
+import com.example.playlistmaker.domain.api.IPlaybackInteractor
 
-class PlaybackInteractor {
+class PlaybackInteractor : IPlaybackInteractor {
 
     private var mediaPlayer: MediaPlayer? = null
     private var isPlaying: Boolean = false
 
-    fun setup(previewUrl: String?, onCompletion: () -> Unit) {
-        if (previewUrl.isNullOrEmpty()) return
-
+    override fun setup(url: String, onComplete: () -> Unit) {
         mediaPlayer = MediaPlayer().apply {
-            setDataSource(previewUrl)
+            setDataSource(url)
+            setOnPreparedListener { onComplete() }
             prepareAsync()
-            setOnCompletionListener {
-                stop()
-                onCompletion()
-            }
         }
     }
 
-    fun play(onPlay: () -> Unit) {
+    override fun play(onComplete: () -> Unit) {
         mediaPlayer?.let {
             it.start()
             isPlaying = true
-            onPlay()
+            onComplete()
         }
     }
 
-    fun pause(onPause: () -> Unit) {
+    override fun pause(onComplete: () -> Unit) {
         mediaPlayer?.let {
             it.pause()
             isPlaying = false
-            onPause()
+            onComplete()
         }
     }
 
-    fun stop() {
+    override fun stop() {
         mediaPlayer?.stop()
         mediaPlayer?.release()
         mediaPlayer = null
         isPlaying = false
     }
 
-    fun isPlaying(): Boolean {
+    override fun isPlaying(): Boolean {
         return isPlaying
     }
 
-    fun getCurrentPosition(): Int {
-        return mediaPlayer?.currentPosition ?: 0
+    override fun getCurrentPosition(): Long {
+        return mediaPlayer?.currentPosition?.toLong() ?: 0L
+    }
+
+    override fun togglePlayback(onPlay: () -> Unit, onPause: () -> Unit) {
+        if (isPlaying()) {
+            pause(onPause)
+        } else {
+            play(onPlay)
+        }
+    }
+
+    override fun getCurrentTimeFormatted(): String {
+        val currentPosition = getCurrentPosition() / 1000
+        val minutes = currentPosition / 60
+        val seconds = currentPosition % 60
+        return String.format("%02d:%02d", minutes, seconds)
     }
 }

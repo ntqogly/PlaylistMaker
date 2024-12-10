@@ -11,7 +11,7 @@
     <string name="tv_dark_mode">Темная тема</string>
     <string name="practicum_Url">https://practicum.yandex.ru/android-developer/?from=catalog</string>
     <string name="my_email">aldunsar@yandex.ru</string>
-    <string name="support_message">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="support_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="support_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="practicum_offer">https://yandex.ru/legal/practicum_offer/</string>
     <string name="search_hint">Поиск</string>

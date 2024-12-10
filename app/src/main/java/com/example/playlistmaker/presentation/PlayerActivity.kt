@@ -5,8 +5,10 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.usecases.PlaybackInteractor
 
@@ -265,7 +267,7 @@ import com.example.playlistmaker.domain.usecases.PlaybackInteractor
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
-    private val playbackInteractor = PlaybackInteractor()
+    private val playbackInteractor: IPlaybackInteractor by lazy { Creator.providePlaybackInteractor() }
     private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -312,27 +314,23 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun togglePlayback() {
-        if (playbackInteractor.isPlaying()) {
-            playbackInteractor.pause {
+        playbackInteractor.togglePlayback(
+            onPlay = {
+                updatePlayButton(isPlaying = true)
+                startTimer()
+            },
+            onPause = {
                 updatePlayButton(isPlaying = false)
                 stopTimer()
             }
-        } else {
-            playbackInteractor.play {
-                updatePlayButton(isPlaying = true)
-                startTimer()
-            }
-        }
+        )
     }
 
     private fun startTimer() {
         handler.post(object : Runnable {
             override fun run() {
                 if (playbackInteractor.isPlaying()) {
-                    val currentPosition = playbackInteractor.getCurrentPosition() / 1000
-                    val minutes = currentPosition / 60
-                    val seconds = currentPosition % 60
-                    binding.currentTime.text = String.format("%02d:%02d", minutes, seconds)
+                    binding.currentTime.text = playbackInteractor.getCurrentTimeFormatted()
                     handler.postDelayed(this, 1000)
                 }
             }

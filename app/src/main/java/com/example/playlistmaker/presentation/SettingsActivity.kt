@@ -8,6 +8,8 @@ import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.sharedprefs.Preferences
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.domain.api.ISupportInteractor
+import com.example.playlistmaker.domain.usecases.ThemeUseCase
 
 //class SettingsActivity : AppCompatActivity() {
 //
@@ -86,6 +88,12 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var preferences: Preferences
+    private val supportInteractor: ISupportInteractor by lazy {
+        Creator.provideSupportInteractor(
+            this
+        )
+    }
+    private val themeUseCase: ThemeUseCase by lazy { Creator.provideThemeUseCase(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,12 +116,12 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setupThemeSwitch() {
-        val isDarkMode = preferences.getBoolean("is_dark_mode", false)
+        val isDarkMode = themeUseCase.isDarkMode()
         binding.switchTheme.isChecked = isDarkMode
         applyTheme(isDarkMode)
 
         binding.switchTheme.setOnCheckedChangeListener { _, isChecked ->
-            preferences.putBoolean("is_dark_mode", isChecked)
+            themeUseCase.setDarkMode(isChecked)
             applyTheme(isChecked)
         }
     }
@@ -125,16 +133,15 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setupSupportButtons() {
-        val supportInteractor = Creator.provideSupportInteractor(this)
-
         binding.buttonShareApp.setOnClickListener {
             shareApp()
         }
 
         binding.buttonSupport.setOnClickListener {
             val email = getString(R.string.my_email)
-            val subject = getString(R.string.support_body)
-            supportInteractor.contactSupport(email, subject)
+            val subject = getString(R.string.support_subject)
+            val body = getString(R.string.support_body)
+            supportInteractor.contactSupport(email, subject, body)
         }
 
         binding.buttonTermsOfUse.setOnClickListener {
