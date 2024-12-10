@@ -288,12 +288,12 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.tbPlayer.setNavigationOnClickListener {
-            onBackPressed() // Возвращение назад с остановкой воспроизведения
+            onBackPressed()
         }
     }
 
     override fun onBackPressed() {
-        playbackInteractor.stop() // Остановка воспроизведения при выходе
+        playbackInteractor.stop()
         super.onBackPressed()
     }
 

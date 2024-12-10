@@ -8,12 +8,12 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 
 class TrackAdapter(
-    private var tracks: MutableList<Track>,
-    private val onTrackClick: (Track) -> Unit
+    private var tracks: MutableList<Track>, private val onTrackClick: (Track) -> Unit
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.track_list_item, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.track_list_item, parent, false)
         return TrackViewHolder(view)
     }
 
