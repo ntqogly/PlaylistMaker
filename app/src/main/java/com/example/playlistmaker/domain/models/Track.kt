@@ -1,4 +1,4 @@
-package com.example.playlistmaker.models
+package com.example.playlistmaker.domain.models
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
@@ -16,4 +16,4 @@ data class Track(
     @SerializedName("primaryGenreName") val genre: String,
     @SerializedName("releaseDate") val releaseDate: String,
     @SerializedName("previewUrl") val previewUrl: String
-): Parcelable
+) : Parcelable

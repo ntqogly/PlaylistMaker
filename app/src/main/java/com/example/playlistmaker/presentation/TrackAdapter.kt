@@ -1,23 +1,15 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.models.Track
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 
 class TrackAdapter(
-    private var tracks: MutableList<Track>,
-    private val searchHistory: SearchHistory,
-    private val onTrackClick: (Track) -> Unit
+    private var tracks: MutableList<Track>, private val onTrackClick: (Track) -> Unit
 ) : RecyclerView.Adapter<TrackViewHolder>() {
-
-    private fun moveTrackToTop(track: Track) {
-        tracks.remove(track)
-        tracks.add(0, track)
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view =
@@ -31,25 +23,15 @@ class TrackAdapter(
 
         holder.itemView.setOnClickListener {
             onTrackClick(track)
-            moveTrackToTop(track)
-
-            val context = holder.itemView.context
-            val intent = Intent(context, PlayerActivity::class.java).apply {
-                putExtra("track", track)
-                putExtra("artworkUrl100", track.artworkUrl100)
-            }
-            context.startActivity(intent)
         }
     }
 
-
-    override fun getItemCount(): Int {
-        return tracks.size
-    }
+    override fun getItemCount(): Int = tracks.size
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateTracks(newTracks: List<Track>) {
-        tracks = newTracks.toMutableList()
+        tracks.clear()
+        tracks.addAll(newTracks)
         notifyDataSetChanged()
     }
 }
