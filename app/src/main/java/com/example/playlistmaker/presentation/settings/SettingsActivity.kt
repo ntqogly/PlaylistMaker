@@ -1,16 +1,11 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.presentation.settings
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.Creator
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.sharedprefs.Preferences
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.domain.api.ISupportInteractor
-import com.example.playlistmaker.domain.usecases.ThemeUseCase
 
 //class SettingsActivity : AppCompatActivity() {
 //
@@ -143,14 +138,14 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun shareApp() {
-        val shareIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, getString(R.string.practicum_Url))
+        val shareIntent = android.content.Intent().apply {
+            action = android.content.Intent.ACTION_SEND
+            putExtra(
+                android.content.Intent.EXTRA_TEXT,
+                getString(R.string.practicum_Url)
+            )
             type = "text/plain"
         }
-        startActivity(Intent.createChooser(shareIntent, null))
+        startActivity(android.content.Intent.createChooser(shareIntent, null))
     }
 }
-
-
-

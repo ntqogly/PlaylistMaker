@@ -1,5 +1,7 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.presentation.player
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,38 +16,60 @@ class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor) : Vie
     private val _currentTime = MutableLiveData<String>()
     val currentTime: LiveData<String> get() = _currentTime
 
+    private val handler = Handler(Looper.getMainLooper())
+    private val updateTimeRunnable = object : Runnable {
+        override fun run() {
+            if (playbackInteractor.isPlaying()) {
+                _currentTime.postValue(playbackInteractor.getCurrentTimeFormatted())
+                handler.postDelayed(this, 1000)
+            }
+        }
+    }
+
     fun setupPlayer(track: Track) {
         playbackInteractor.setup(track.previewUrl) {
-            _state.postValue(PlayerState.Prepared)
+            _state.postValue(PlayerState.Stopped)
+            stopTimer()
+            resetTimer()
         }
     }
 
     fun play() {
         playbackInteractor.play {
             _state.postValue(PlayerState.Playing)
+            startTimer()
         }
     }
 
     fun pause() {
         playbackInteractor.pause {
             _state.postValue(PlayerState.Paused)
+            stopTimer()
         }
     }
 
     fun stop() {
         playbackInteractor.stop()
         _state.postValue(PlayerState.Stopped)
+        stopTimer()
     }
 
-    fun togglePlayback() {
-        playbackInteractor.togglePlayback(
-            onPlay = { _state.postValue(PlayerState.Playing) },
-            onPause = { _state.postValue(PlayerState.Paused) }
-        )
+    private fun startTimer() {
+        handler.post(updateTimeRunnable)
     }
 
-    fun updateCurrentTime() {
-        _currentTime.postValue(playbackInteractor.getCurrentTimeFormatted())
+    private fun stopTimer() {
+        handler.removeCallbacks(updateTimeRunnable)
+    }
+
+    private fun resetTimer() {
+        _currentTime.postValue("00:00")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        playbackInteractor.stop()
+        stopTimer()
     }
 
     sealed class PlayerState {

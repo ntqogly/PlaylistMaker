@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.presentation.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,10 +16,7 @@ class SettingsViewModel(private val themeUseCase: ThemeUseCase) : ViewModel() {
 
     fun toggleTheme(isEnabled: Boolean) {
         themeUseCase.setDarkMode(isEnabled)
-        _isDarkMode.value = isEnabled
-    }
-
-    fun applySavedTheme() {
         themeUseCase.applySavedTheme()
+        _isDarkMode.value = isEnabled
     }
 }

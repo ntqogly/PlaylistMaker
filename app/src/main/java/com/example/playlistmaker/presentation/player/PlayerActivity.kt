@@ -1,15 +1,12 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.presentation.player
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.playlistmaker.Creator
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.models.Track
 
 //class PlayerActivity : AppCompatActivity() {
@@ -129,7 +126,11 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.buttonPlayTrack.setOnClickListener {
-            viewModel.togglePlayback()
+            if (viewModel.state.value is PlayerViewModel.PlayerState.Playing) {
+                viewModel.pause()
+            } else {
+                viewModel.play()
+            }
         }
 
         binding.tbPlayer.setNavigationOnClickListener {
@@ -144,10 +145,10 @@ class PlayerActivity : AppCompatActivity() {
             tvTrackName.text = track.trackName
             tvArtistName.text = track.artistName
             trackDuration.text = formatTime(track.trackTimeMillis)
-            trackAlbum.text = track.trackAlbum.ifEmpty { "Unknown Album" }
+            trackAlbum.text = track.trackAlbum
             trackReleaseDate.text = track.releaseDate.substring(0, 4)
-            trackGenre.text = track.genre.ifEmpty { "Unknown Genre" }
-            trackCountry.text = track.trackCountry.ifEmpty { "Unknown Country" }
+            trackGenre.text = track.genre
+            trackCountry.text = track.trackCountry
 
             Glide.with(this@PlayerActivity)
                 .load(track.artworkUrl100.replace("100x100", "600x600"))
@@ -187,4 +188,5 @@ class PlayerActivity : AppCompatActivity() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 }
+
 

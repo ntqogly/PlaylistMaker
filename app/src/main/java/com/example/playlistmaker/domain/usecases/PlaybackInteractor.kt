@@ -12,6 +12,10 @@ class PlaybackInteractor : IPlaybackInteractor {
         mediaPlayer = MediaPlayer().apply {
             setDataSource(url)
             setOnPreparedListener { onComplete() }
+            setOnCompletionListener {
+                this@PlaybackInteractor.isPlaying = false
+                onComplete()
+            }
             prepareAsync()
         }
     }

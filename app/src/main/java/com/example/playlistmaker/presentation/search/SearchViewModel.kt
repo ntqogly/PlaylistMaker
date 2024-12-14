@@ -1,14 +1,10 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.presentation.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.ISearchTrackUseCase
 import com.example.playlistmaker.domain.models.Track
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SearchViewModel(
     private val searchTrackUseCase: ISearchTrackUseCase
@@ -19,18 +15,14 @@ class SearchViewModel(
 
     fun searchTracks(query: String) {
         _state.value = SearchState.Loading
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                searchTrackUseCase.executeAsync(query) { result ->
-                    _state.postValue(
-                        if (result.isNotEmpty()) {
-                            SearchState.Success(result)
-                        } else {
-                            SearchState.Empty
-                        }
-                    )
+        searchTrackUseCase.executeAsync(query) { result ->
+            _state.postValue(
+                if (result.isNotEmpty()) {
+                    SearchState.Success(result)
+                } else {
+                    SearchState.Empty
                 }
-            }
+            )
         }
     }
 

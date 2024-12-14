@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.creator
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -18,9 +18,9 @@ import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
 import com.example.playlistmaker.domain.usecases.SearchTrackUseCase
 import com.example.playlistmaker.domain.usecases.SupportInteractor
 import com.example.playlistmaker.domain.usecases.ThemeUseCase
-import com.example.playlistmaker.presentation.PlayerViewModel
-import com.example.playlistmaker.presentation.SearchViewModel
-import com.example.playlistmaker.presentation.SettingsViewModel
+import com.example.playlistmaker.presentation.player.PlayerViewModel
+import com.example.playlistmaker.presentation.search.SearchViewModel
+import com.example.playlistmaker.presentation.settings.SettingsViewModel
 
 object Creator {
 

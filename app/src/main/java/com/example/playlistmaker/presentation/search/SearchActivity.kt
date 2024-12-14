@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.presentation.search
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,9 +11,11 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.Creator
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.player.PlayerActivity
+import com.example.playlistmaker.presentation.adapter.TrackAdapter
 
 //class SearchActivity : AppCompatActivity() {
 //
@@ -195,6 +197,7 @@ class SearchActivity : AppCompatActivity() {
         setupListeners()
         setupSearchTextWatcher()
         setupEditorActionListener()
+        loadSearchHistory()
 
         observeViewModel()
     }
@@ -258,12 +261,15 @@ class SearchActivity : AppCompatActivity() {
         viewModel.state.observe(this) { state ->
             when (state) {
                 is SearchViewModel.SearchState.Initial -> loadSearchHistory()
-                is SearchViewModel.SearchState.Loading -> binding.progressBarSearch.visibility = View.VISIBLE
+                is SearchViewModel.SearchState.Loading -> binding.progressBarSearch.visibility =
+                    View.VISIBLE
+
                 is SearchViewModel.SearchState.Success -> {
                     binding.progressBarSearch.visibility = View.GONE
                     trackAdapter.updateTracks(state.tracks)
                     showTrackList()
                 }
+
                 is SearchViewModel.SearchState.Empty -> {
                     binding.progressBarSearch.visibility = View.GONE
                     showNothingFound()
