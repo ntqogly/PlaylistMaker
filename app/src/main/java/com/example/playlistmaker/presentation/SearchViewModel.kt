@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.domain.api.ISearchTrackUseCase
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.usecases.SearchTrackUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SearchViewModel(
-    private val searchTrackUseCase: SearchTrackUseCase
+    private val searchTrackUseCase: ISearchTrackUseCase
 ) : ViewModel() {
 
     private val _state = MutableLiveData<SearchState>()

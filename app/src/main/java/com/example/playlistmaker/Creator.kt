@@ -1,6 +1,8 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.data.mapper.TrackMapper
 import com.example.playlistmaker.data.network.NetworkClientImpl
 import com.example.playlistmaker.data.network.TrackRepositoryImpl
@@ -16,6 +18,8 @@ import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
 import com.example.playlistmaker.domain.usecases.SearchTrackUseCase
 import com.example.playlistmaker.domain.usecases.SupportInteractor
 import com.example.playlistmaker.domain.usecases.ThemeUseCase
+import com.example.playlistmaker.presentation.PlayerViewModel
+import com.example.playlistmaker.presentation.SearchViewModel
 
 object Creator {
 
@@ -51,6 +55,28 @@ object Creator {
 
     fun provideThemeUseCase(context: Context): ThemeUseCase {
         return ThemeUseCase(provideThemeRepository(context))
+    }
+
+    fun provideSearchViewModelFactory(context: Context): ViewModelProvider.Factory {
+        return object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                if (modelClass.isAssignableFrom(SearchViewModel::class.java)) {
+                    return SearchViewModel(provideSearchTrackUseCase()) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
+            }
+        }
+    }
+
+    fun providePlayerViewModelFactory(): ViewModelProvider.Factory {
+        return object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                if (modelClass.isAssignableFrom(PlayerViewModel::class.java)) {
+                    return PlayerViewModel(providePlaybackInteractor()) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
+            }
+        }
     }
 }
 
