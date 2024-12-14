@@ -20,6 +20,7 @@ import com.example.playlistmaker.domain.usecases.SupportInteractor
 import com.example.playlistmaker.domain.usecases.ThemeUseCase
 import com.example.playlistmaker.presentation.PlayerViewModel
 import com.example.playlistmaker.presentation.SearchViewModel
+import com.example.playlistmaker.presentation.SettingsViewModel
 
 object Creator {
 
@@ -73,6 +74,17 @@ object Creator {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 if (modelClass.isAssignableFrom(PlayerViewModel::class.java)) {
                     return PlayerViewModel(providePlaybackInteractor()) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
+            }
+        }
+    }
+
+    fun provideSettingsViewModelFactory(context: Context): ViewModelProvider.Factory {
+        return object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
+                    return SettingsViewModel(provideThemeUseCase(context)) as T
                 }
                 throw IllegalArgumentException("Unknown ViewModel class")
             }
