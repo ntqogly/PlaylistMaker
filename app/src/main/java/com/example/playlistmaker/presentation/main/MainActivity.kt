@@ -17,11 +17,11 @@ import com.example.playlistmaker.presentation.settings.SettingsActivity
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val themeUseCase: ThemeUseCase by lazy { Creator.provideThemeUseCase(this) }
+//    private val themeUseCase: ThemeUseCase by lazy { Creator.provideThemeUseCase(this) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        themeUseCase.applySavedTheme()
+//        themeUseCase.applySavedTheme()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
