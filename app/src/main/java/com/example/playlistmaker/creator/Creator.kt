@@ -9,11 +9,13 @@ import com.example.playlistmaker.data.network.NetworkClientImpl
 import com.example.playlistmaker.data.network.TrackRepositoryImpl
 import com.example.playlistmaker.data.repository.ThemeRepositoryImpl
 import com.example.playlistmaker.data.repository.SharedPreferencesSearchHistory
+import com.example.playlistmaker.data.threads.AndroidThreadExecutor
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.api.ISearchTrackUseCase
 import com.example.playlistmaker.domain.api.ISupportInteractor
 import com.example.playlistmaker.domain.api.ThemeRepository
 import com.example.playlistmaker.domain.api.TrackRepository
+import com.example.playlistmaker.domain.threads.ThreadExecutor
 import com.example.playlistmaker.domain.usecases.PlaybackInteractor
 import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
 import com.example.playlistmaker.domain.usecases.SearchTrackUseCase
@@ -31,9 +33,12 @@ object Creator {
     private val trackRepository: TrackRepository by lazy {
         TrackRepositoryImpl(networkClient, trackMapper)
     }
+    private val threadExecutor: ThreadExecutor by lazy {
+        AndroidThreadExecutor()
+    }
 
     fun provideSearchTrackUseCase(): ISearchTrackUseCase {
-        return SearchTrackUseCase(trackRepository)
+        return SearchTrackUseCase(trackRepository, threadExecutor)
     }
 
     fun provideSearchHistoryUseCase(context: Context): SearchHistoryUseCase {

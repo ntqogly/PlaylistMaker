@@ -1,29 +1,27 @@
 package com.example.playlistmaker.domain.usecases
 
-import android.os.Handler
-import android.os.Looper
 import com.example.playlistmaker.domain.api.ISearchTrackUseCase
 import com.example.playlistmaker.domain.api.TrackRepository
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.threads.ThreadExecutor
 
 class SearchTrackUseCase(
-    private val trackRepository: TrackRepository
+    private val trackRepository: TrackRepository, private val threadExecutor: ThreadExecutor
 ) : ISearchTrackUseCase {
 
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
-
     override fun executeAsync(expression: String, callback: (tracks: List<Track>) -> Unit) {
-        Thread {
+        threadExecutor.executeInBackground {
             try {
                 val tracks = trackRepository.searchTrack(expression)
-                mainThreadHandler.post {
+                threadExecutor.postToMainThread {
                     callback(tracks)
                 }
             } catch (e: Exception) {
-                mainThreadHandler.post {
+                threadExecutor.postToMainThread {
                     callback(emptyList())
                 }
             }
-        }.start()
+        }
     }
 }
+
