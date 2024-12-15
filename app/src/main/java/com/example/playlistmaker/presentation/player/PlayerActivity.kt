@@ -8,6 +8,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.domain.models.Track
+import com.google.gson.Gson
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -22,7 +23,8 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val track = intent.getParcelableExtra<Track>("TRACK_EXTRA")
+        val trackJson = intent.getStringExtra("TRACK_EXTRA")
+        val track = Gson().fromJson(trackJson, Track::class.java)
         track?.let {
             displayTrackInfo(it)
             viewModel.setupPlayer(it)

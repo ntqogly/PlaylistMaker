@@ -16,6 +16,7 @@ import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentation.adapter.TrackAdapter
 import com.example.playlistmaker.presentation.player.PlayerActivity
+import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
 
@@ -133,7 +134,7 @@ class SearchActivity : AppCompatActivity() {
     private fun openPlayerActivity(track: Track) {
         Creator.provideSearchHistoryUseCase(this).addTrackToHistory(track)
         val intent = Intent(this, PlayerActivity::class.java).apply {
-            putExtra("TRACK_EXTRA", track)
+            putExtra("TRACK_EXTRA", Gson().toJson(track))
         }
         startActivity(intent)
     }
