@@ -1,6 +1,6 @@
 package com.example.playlistmaker.creator
 
-import AndroidMediaPlayerRepository
+import MediaPlayerRepository
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,6 +9,7 @@ import com.example.playlistmaker.data.network.NetworkClientImpl
 import com.example.playlistmaker.data.network.TrackRepositoryImpl
 import com.example.playlistmaker.data.repository.ThemeRepositoryImpl
 import com.example.playlistmaker.data.repository.SharedPreferencesSearchHistory
+import com.example.playlistmaker.data.repository.SupportRepository
 import com.example.playlistmaker.data.threads.AndroidThreadExecutor
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.api.ISearchTrackUseCase
@@ -50,11 +51,13 @@ object Creator {
 
 
     fun providePlaybackInteractor(): IPlaybackInteractor {
-        return PlaybackInteractor(AndroidMediaPlayerRepository())
+        val mediaPlayerRepository = MediaPlayerRepository()
+        return PlaybackInteractor(mediaPlayerRepository)
     }
 
     fun provideSupportInteractor(context: Context): ISupportInteractor {
-        return SupportInteractor(context)
+        val supportRepository = SupportRepository(context)
+        return SupportInteractor(supportRepository)
     }
 
     private fun provideThemeRepository(context: Context): ThemeRepository {
