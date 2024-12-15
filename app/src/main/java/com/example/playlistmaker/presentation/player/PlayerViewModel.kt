@@ -28,7 +28,7 @@ class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor) : Vie
 
     fun setupPlayer(track: Track) {
         playbackInteractor.setup(track.previewUrl) {
-            _state.postValue(PlayerState.Stopped)
+            _state.postValue(PlayerState.Prepared)
             stopTimer()
             resetTimer()
         }
@@ -46,12 +46,6 @@ class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor) : Vie
             _state.postValue(PlayerState.Paused)
             stopTimer()
         }
-    }
-
-    fun stop() {
-        playbackInteractor.stop()
-        _state.postValue(PlayerState.Stopped)
-        stopTimer()
     }
 
     private fun startTimer() {

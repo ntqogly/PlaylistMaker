@@ -9,7 +9,9 @@ class MediaPlayerRepository : IPlaybackInteractor {
     override fun setup(url: String, onComplete: () -> Unit) {
         mediaPlayer = MediaPlayer().apply {
             setDataSource(url)
-            setOnPreparedListener { start() }
+            setOnPreparedListener {
+                onComplete()
+            }
             setOnCompletionListener {
                 this@MediaPlayerRepository.isPlaying = false
                 onComplete()
@@ -17,6 +19,7 @@ class MediaPlayerRepository : IPlaybackInteractor {
             prepareAsync()
         }
     }
+
 
     override fun play(onComplete: () -> Unit) {
         mediaPlayer?.let {
