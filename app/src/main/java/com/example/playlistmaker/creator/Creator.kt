@@ -1,5 +1,6 @@
 package com.example.playlistmaker.creator
 
+import AndroidMediaPlayerRepository
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -7,7 +8,7 @@ import com.example.playlistmaker.data.mapper.TrackMapper
 import com.example.playlistmaker.data.network.NetworkClientImpl
 import com.example.playlistmaker.data.network.TrackRepositoryImpl
 import com.example.playlistmaker.data.repository.ThemeRepositoryImpl
-import com.example.playlistmaker.data.sharedprefs.SearchHistory
+import com.example.playlistmaker.data.repository.SharedPreferencesSearchHistory
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.api.ISearchTrackUseCase
 import com.example.playlistmaker.domain.api.ISupportInteractor
@@ -38,11 +39,13 @@ object Creator {
     fun provideSearchHistoryUseCase(context: Context): SearchHistoryUseCase {
         val sharedPreferences =
             context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-        return SearchHistoryUseCase(SearchHistory(sharedPreferences))
+        val searchHistoryRepository = SharedPreferencesSearchHistory(sharedPreferences)
+        return SearchHistoryUseCase(searchHistoryRepository)
     }
 
+
     fun providePlaybackInteractor(): IPlaybackInteractor {
-        return PlaybackInteractor()
+        return PlaybackInteractor(AndroidMediaPlayerRepository())
     }
 
     fun provideSupportInteractor(context: Context): ISupportInteractor {

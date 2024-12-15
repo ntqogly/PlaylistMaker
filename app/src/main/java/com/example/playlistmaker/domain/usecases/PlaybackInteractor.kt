@@ -1,61 +1,40 @@
 package com.example.playlistmaker.domain.usecases
 
-import android.media.MediaPlayer
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
+import com.example.playlistmaker.domain.api.MediaPlayerRepository
 
-class PlaybackInteractor : IPlaybackInteractor {
-
-    private var mediaPlayer: MediaPlayer? = null
-    private var isPlaying: Boolean = false
+class PlaybackInteractor(private val mediaPlayerRepository: MediaPlayerRepository) :
+    IPlaybackInteractor {
 
     override fun setup(url: String, onComplete: () -> Unit) {
-        mediaPlayer = MediaPlayer().apply {
-            setDataSource(url)
-            setOnPreparedListener { onComplete() }
-            setOnCompletionListener {
-                this@PlaybackInteractor.isPlaying = false
-                onComplete()
-            }
-            prepareAsync()
-        }
+        mediaPlayerRepository.setup(url, onComplete)
     }
 
     override fun play(onComplete: () -> Unit) {
-        mediaPlayer?.let {
-            it.start()
-            isPlaying = true
-            onComplete()
-        }
+        mediaPlayerRepository.play(onComplete)
     }
 
     override fun pause(onComplete: () -> Unit) {
-        mediaPlayer?.let {
-            it.pause()
-            isPlaying = false
-            onComplete()
-        }
+        mediaPlayerRepository.pause(onComplete)
     }
 
     override fun stop() {
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
-        mediaPlayer = null
-        isPlaying = false
+        mediaPlayerRepository.stop()
     }
 
     override fun isPlaying(): Boolean {
-        return isPlaying
+        return mediaPlayerRepository.isPlaying()
     }
 
     override fun getCurrentPosition(): Long {
-        return mediaPlayer?.currentPosition?.toLong() ?: 0L
+        return mediaPlayerRepository.getCurrentPosition()
     }
 
     override fun togglePlayback(onPlay: () -> Unit, onPause: () -> Unit) {
-        if (isPlaying()) {
-            pause(onPause)
+        if (mediaPlayerRepository.isPlaying()) {
+            mediaPlayerRepository.pause(onPause)
         } else {
-            play(onPlay)
+            mediaPlayerRepository.play(onPlay)
         }
     }
 
