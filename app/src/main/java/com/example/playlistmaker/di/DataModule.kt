@@ -11,7 +11,6 @@ import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.ThemeRepository
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.scope.get
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
