@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,19 +6,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.Creator
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMainBinding
 import com.example.playlistmaker.domain.usecases.ThemeUseCase
+import com.example.playlistmaker.presentation.media.MediaActivity
+import com.example.playlistmaker.presentation.search.SearchActivity
+import com.example.playlistmaker.presentation.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val themeUseCase: ThemeUseCase by lazy { Creator.provideThemeUseCase(this) }
+//    private val themeUseCase: ThemeUseCase by lazy { Creator.provideThemeUseCase(this) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        themeUseCase.applySavedTheme()
+//        themeUseCase.applySavedTheme()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
