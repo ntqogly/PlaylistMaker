@@ -17,6 +17,7 @@ import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentation.adapter.TrackAdapter
 import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -24,9 +25,10 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
-    private val viewModel: SearchViewModel by viewModels {
-        Creator.provideSearchViewModelFactory(this)
-    }
+    //    private val viewModel: SearchViewModel by viewModels {
+//        Creator.provideSearchViewModelFactory(this)
+//    }
+    private val viewModel by viewModel<SearchViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

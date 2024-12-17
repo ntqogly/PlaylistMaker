@@ -1,5 +1,8 @@
 package com.example.playlistmaker.di
 
+import MediaPlayerRepository
+import com.example.playlistmaker.domain.api.IPlaybackInteractor
+import com.example.playlistmaker.domain.api.ISearchTrackUseCase
 import com.example.playlistmaker.domain.usecases.PlaybackInteractor
 import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
 import com.example.playlistmaker.domain.usecases.SearchTrackUseCase
@@ -8,19 +11,10 @@ import com.example.playlistmaker.domain.usecases.ThemeUseCase
 import org.koin.dsl.module
 
 val interactorModule = module {
-    single {
-        SearchTrackUseCase(get(), get())
-    }
-    single {
-        PlaybackInteractor(get())
-    }
-    single {
-        SearchHistoryUseCase(get())
-    }
-    single {
-        ThemeUseCase(get())
-    }
-    single {
-        SupportInteractor(get())
-    }
+    single<ISearchTrackUseCase> { SearchTrackUseCase(get(), get()) }
+    single { PlaybackInteractor(get()) }
+    single<IPlaybackInteractor> { MediaPlayerRepository() }
+    single { SearchHistoryUseCase(get()) }
+    single { ThemeUseCase(get()) }
+    single { SupportInteractor(get()) }
 }

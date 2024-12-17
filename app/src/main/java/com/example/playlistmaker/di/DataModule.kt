@@ -7,8 +7,10 @@ import com.example.playlistmaker.data.network.NetworkClient
 import com.example.playlistmaker.data.network.NetworkClientImpl
 import com.example.playlistmaker.data.repository.SharedPreferencesSearchHistory
 import com.example.playlistmaker.data.repository.ThemeRepositoryImpl
+import com.example.playlistmaker.data.threads.AndroidThreadExecutor
 import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.ThemeRepository
+import com.example.playlistmaker.domain.threads.ThreadExecutor
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -29,7 +31,7 @@ val dataModule = module {
         SharedPreferencesSearchHistory(get())
     }
     single<NetworkClient> {
-        NetworkClientImpl(get(), androidContext())
+        NetworkClientImpl()
     }
     single<ITunesApiService> {
         Retrofit.Builder()
@@ -41,4 +43,6 @@ val dataModule = module {
     single {
         TrackMapper()
     }
+    single<ThreadExecutor> { AndroidThreadExecutor() }
+
 }

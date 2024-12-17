@@ -6,13 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.presentation.search.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private val viewModel: SettingsViewModel by viewModels {
-        Creator.provideSettingsViewModelFactory(this)
-    }
+//    private val viewModel: SettingsViewModel by viewModels {
+//        Creator.provideSettingsViewModelFactory(this)
+//    }
+private val viewModel by viewModel<SettingsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
