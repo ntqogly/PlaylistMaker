@@ -8,15 +8,15 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
 import com.example.playlistmaker.presentation.adapter.TrackAdapter
 import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.gson.Gson
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
@@ -29,6 +29,7 @@ class SearchActivity : AppCompatActivity() {
 //        Creator.provideSearchViewModelFactory(this)
 //    }
     private val viewModel by viewModel<SearchViewModel>()
+    private val searchHistoryUseCase: SearchHistoryUseCase by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +69,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.clearHistButton.setOnClickListener {
-            Creator.provideSearchHistoryUseCase(this).clearHistory()
+            searchHistoryUseCase.clearHistory()
             loadSearchHistory()
         }
     }
@@ -123,7 +124,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun loadSearchHistory() {
-        val history = Creator.provideSearchHistoryUseCase(this).getSearchHistory()
+        val history = searchHistoryUseCase.getSearchHistory()
         if (history.isNotEmpty()) {
             historyAdapter.updateTracks(history)
             historyAdapter.notifyDataSetChanged()
@@ -134,7 +135,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun openPlayerActivity(track: Track) {
-        Creator.provideSearchHistoryUseCase(this).addTrackToHistory(track)
+        searchHistoryUseCase.addTrackToHistory(track)
         val intent = Intent(this, PlayerActivity::class.java).apply {
             putExtra("TRACK_EXTRA", Gson().toJson(track))
         }

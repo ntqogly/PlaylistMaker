@@ -3,6 +3,7 @@ package com.example.playlistmaker.di
 import MediaPlayerRepository
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.api.ISearchTrackUseCase
+import com.example.playlistmaker.domain.api.ISupportInteractor
 import com.example.playlistmaker.domain.usecases.PlaybackInteractor
 import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
 import com.example.playlistmaker.domain.usecases.SearchTrackUseCase
@@ -14,7 +15,7 @@ val interactorModule = module {
     single<ISearchTrackUseCase> { SearchTrackUseCase(get(), get()) }
     single { PlaybackInteractor(get()) }
     single<IPlaybackInteractor> { MediaPlayerRepository() }
+    single<ISupportInteractor> { SupportInteractor(get()) }
     single { SearchHistoryUseCase(get()) }
     single { ThemeUseCase(get()) }
-    single { SupportInteractor(get()) }
 }

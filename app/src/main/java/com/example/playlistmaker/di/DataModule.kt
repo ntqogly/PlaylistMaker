@@ -6,6 +6,7 @@ import com.example.playlistmaker.data.network.ITunesApiService
 import com.example.playlistmaker.data.network.NetworkClient
 import com.example.playlistmaker.data.network.NetworkClientImpl
 import com.example.playlistmaker.data.repository.SharedPreferencesSearchHistory
+import com.example.playlistmaker.data.repository.SupportRepository
 import com.example.playlistmaker.data.repository.ThemeRepositoryImpl
 import com.example.playlistmaker.data.threads.AndroidThreadExecutor
 import com.example.playlistmaker.domain.api.SearchHistoryRepository
@@ -21,28 +22,24 @@ val dataModule = module {
     single {
         Gson()
     }
-    single {
-        androidContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-    }
-    single<ThemeRepository> {
-        ThemeRepositoryImpl(get())
-    }
-    single<SearchHistoryRepository> {
-        SharedPreferencesSearchHistory(get())
-    }
-    single<NetworkClient> {
-        NetworkClientImpl()
-    }
+    single { androidContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE) }
+    single { SharedPreferencesSearchHistory(get()) }
+    single { SupportRepository(androidContext()) }
+
+
+    single<ThemeRepository> { ThemeRepositoryImpl(get()) }
+
+    single<SearchHistoryRepository> { SharedPreferencesSearchHistory(get()) }
+
+    single<NetworkClient> { NetworkClientImpl(get()) }
+
     single<ITunesApiService> {
-        Retrofit.Builder()
-            .baseUrl("https://itunes.apple.com")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        Retrofit.Builder().baseUrl("https://itunes.apple.com")
+            .addConverterFactory(GsonConverterFactory.create()).build()
             .create(ITunesApiService::class.java)
     }
-    single {
-        TrackMapper()
-    }
+    single { TrackMapper() }
+
     single<ThreadExecutor> { AndroidThreadExecutor() }
 
 }
