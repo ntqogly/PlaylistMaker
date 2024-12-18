@@ -13,21 +13,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
-import com.example.playlistmaker.presentation.adapter.TrackAdapter
 import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.gson.Gson
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.getKoin
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
+
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
-    //    private val viewModel: SearchViewModel by viewModels {
-//        Creator.provideSearchViewModelFactory(this)
-//    }
     private val viewModel by viewModel<SearchViewModel>()
     private val searchHistoryUseCase: SearchHistoryUseCase by inject()
 

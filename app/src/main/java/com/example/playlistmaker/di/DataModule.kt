@@ -1,6 +1,10 @@
 package com.example.playlistmaker.di
 
+import MediaPlayerRepository
 import android.content.Context
+import android.media.MediaPlayer
+import android.os.Handler
+import android.os.Looper
 import com.example.playlistmaker.data.mapper.TrackMapper
 import com.example.playlistmaker.data.network.ITunesApiService
 import com.example.playlistmaker.data.network.NetworkClient
@@ -40,6 +44,10 @@ val dataModule = module {
     }
     single { TrackMapper() }
 
-    single<ThreadExecutor> { AndroidThreadExecutor() }
+    single<ThreadExecutor> { AndroidThreadExecutor(get()) }
+    single { Handler(Looper.getMainLooper()) }
+
+    single { MediaPlayer() }
+    single { MediaPlayerRepository(get()) }
 
 }

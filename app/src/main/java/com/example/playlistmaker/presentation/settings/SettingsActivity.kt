@@ -11,10 +11,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-
-    //    private val viewModel: SettingsViewModel by viewModels {
-//        Creator.provideSettingsViewModelFactory(this)
-//    }
     private val viewModel by viewModel<SettingsViewModel>()
     private val supportInteractor: ISupportInteractor by inject()
 
@@ -36,8 +32,8 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.isDarkMode.observe(this) { isDarkMode ->
-            binding.switchTheme.isChecked = isDarkMode
+        viewModel.state.observe(this) { state ->
+            binding.switchTheme.isChecked = state.isDarkMode
         }
     }
 
