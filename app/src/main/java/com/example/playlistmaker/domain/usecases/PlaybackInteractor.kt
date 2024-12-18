@@ -37,6 +37,10 @@ class PlaybackInteractor(private val iPlaybackInteractor: IPlaybackInteractor) :
         }
     }
 
+    override fun release() {
+        iPlaybackInteractor.release()
+    }
+
     override fun getCurrentTimeFormatted(): String {
         return iPlaybackInteractor.getCurrentTimeFormatted()
     }

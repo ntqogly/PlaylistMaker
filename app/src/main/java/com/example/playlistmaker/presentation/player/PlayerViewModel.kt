@@ -8,43 +8,60 @@ import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.models.Track
 
-class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor) : ViewModel() {
+class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor, private val handler:Handler) : ViewModel() {
 
     private val _state = MutableLiveData<PlayerState>()
     val state: LiveData<PlayerState> get() = _state
 
-    private val _currentTime = MutableLiveData<String>()
-    val currentTime: LiveData<String> get() = _currentTime
-
-    private val handler = Handler(Looper.getMainLooper())
     private val updateTimeRunnable = object : Runnable {
         override fun run() {
-            if (playbackInteractor.isPlaying()) {
-                _currentTime.postValue(playbackInteractor.getCurrentTimeFormatted())
-                handler.postDelayed(this, 1000)
-            }
+            val currentTime = playbackInteractor.getCurrentTimeFormatted()
+            _state.postValue(
+                PlayerState.Active(
+                    playbackState = PlayerState.PlaybackState.PLAYING,
+                    currentTime = currentTime
+                )
+            )
+            handler.postDelayed(this, 1000)
         }
+    }
+
+    init {
+        _state.value = PlayerState.Active(
+            playbackState = PlayerState.PlaybackState.PREPARED
+        )
     }
 
     fun setupPlayer(track: Track) {
         playbackInteractor.setup(track.previewUrl) {
-            _state.postValue(PlayerState.Prepared)
+            _state.postValue(
+                PlayerState.Active(
+                    playbackState = PlayerState.PlaybackState.PREPARED
+                )
+            )
             stopTimer()
-            resetTimer()
         }
     }
 
     fun play() {
         playbackInteractor.play {
-            _state.postValue(PlayerState.Playing)
             startTimer()
+            _state.postValue(
+                PlayerState.Active(
+                    playbackState = PlayerState.PlaybackState.PLAYING
+                )
+            )
         }
     }
 
     fun pause() {
         playbackInteractor.pause {
-            _state.postValue(PlayerState.Paused)
             stopTimer()
+            _state.postValue(
+                PlayerState.Active(
+                    playbackState = PlayerState.PlaybackState.PAUSED
+                )
+            )
         }
     }
 
@@ -56,20 +73,19 @@ class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor) : Vie
         handler.removeCallbacks(updateTimeRunnable)
     }
 
-    private fun resetTimer() {
-        _currentTime.postValue("00:00")
+    fun stopPlayback() {
+        playbackInteractor.stop()
+        stopTimer()
+        _state.postValue(
+            PlayerState.Active(
+                playbackState = PlayerState.PlaybackState.STOPPED
+            )
+        )
     }
 
     override fun onCleared() {
         super.onCleared()
-        playbackInteractor.stop()
-        stopTimer()
-    }
-
-    sealed class PlayerState {
-        object Prepared : PlayerState()
-        object Playing : PlayerState()
-        object Paused : PlayerState()
-        object Stopped : PlayerState()
+        stopPlayback()
     }
 }
+

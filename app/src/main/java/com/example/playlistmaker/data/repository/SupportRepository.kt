@@ -8,8 +8,11 @@ import com.example.playlistmaker.domain.api.ISupportInteractor
 class SupportRepository(private val context: Context) : ISupportInteractor {
 
     override fun openTermsOfUse(url: String) {
-        val termsIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        val termsIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
         context.startActivity(termsIntent)
+
     }
 
     override fun contactSupport(email: String, subject: String, body: String) {
@@ -17,6 +20,7 @@ class SupportRepository(private val context: Context) : ISupportInteractor {
             data = Uri.parse("mailto:$email")
             putExtra(Intent.EXTRA_SUBJECT, subject)
             putExtra(Intent.EXTRA_TEXT, body)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(intent)
     }

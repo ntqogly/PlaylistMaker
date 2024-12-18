@@ -9,4 +9,6 @@ interface IPlaybackInteractor {
     fun getCurrentPosition(): Long
     fun togglePlayback(onPlay: () -> Unit, onPause: () -> Unit)
     fun getCurrentTimeFormatted(): String
+    fun release()
+
 }

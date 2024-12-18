@@ -1,18 +1,18 @@
 package com.example.playlistmaker.presentation.settings
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.domain.api.ISupportInteractor
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private val viewModel: SettingsViewModel by viewModels {
-        Creator.provideSettingsViewModelFactory(this)
-    }
+    private val viewModel by viewModel<SettingsViewModel>()
+    private val supportInteractor: ISupportInteractor by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +32,8 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.isDarkMode.observe(this) { isDarkMode ->
-            binding.switchTheme.isChecked = isDarkMode
+        viewModel.state.observe(this) { state ->
+            binding.switchTheme.isChecked = state.isDarkMode
         }
     }
 
@@ -52,12 +52,12 @@ class SettingsActivity : AppCompatActivity() {
             val email = getString(R.string.my_email)
             val subject = getString(R.string.support_subject)
             val body = getString(R.string.support_body)
-            Creator.provideSupportInteractor(this).contactSupport(email, subject, body)
+            supportInteractor.contactSupport(email, subject, body)
         }
 
         binding.buttonTermsOfUse.setOnClickListener {
             val termsUrl = getString(R.string.practicum_offer)
-            Creator.provideSupportInteractor(this).openTermsOfUse(termsUrl)
+            supportInteractor.openTermsOfUse(termsUrl)
         }
     }
 
