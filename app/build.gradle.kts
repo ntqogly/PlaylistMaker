@@ -57,4 +57,6 @@ dependencies {
     implementation(libs.converter.gson)
 
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
+    implementation (libs.koin.android)
+
 }

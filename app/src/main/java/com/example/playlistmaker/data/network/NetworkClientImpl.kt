@@ -4,11 +4,11 @@ import android.util.Log
 import com.example.playlistmaker.data.dto.Response
 import com.example.playlistmaker.data.dto.TrackSearchRequest
 
-class NetworkClientImpl : NetworkClient {
+class NetworkClientImpl(private val apiService: ITunesApiService) : NetworkClient {
     override fun searchTrack(dto: Any): Response {
         return try {
             if (dto is TrackSearchRequest) {
-                val response = ApiFactory.apiService.search(dto.expression).execute()
+                val response = apiService.search(dto.expression).execute()
                 response.body()?.apply { resultCode = response.code() } ?: Response(response.code())
             } else {
                 return Response(404)

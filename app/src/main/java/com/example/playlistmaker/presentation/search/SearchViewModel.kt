@@ -31,9 +31,9 @@ class SearchViewModel(
     }
 
     sealed class SearchState {
-        object Initial : SearchState()
-        object Loading : SearchState()
+        data object Initial : SearchState()
+        data object Loading : SearchState()
         data class Success(val tracks: List<Track>) : SearchState()
-        object Empty : SearchState()
+        data object Empty : SearchState()
     }
 }

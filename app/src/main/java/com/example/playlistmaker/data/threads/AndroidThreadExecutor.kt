@@ -4,8 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import com.example.playlistmaker.domain.threads.ThreadExecutor
 
-class AndroidThreadExecutor : ThreadExecutor {
-    private val mainHandler = Handler(Looper.getMainLooper())
+class AndroidThreadExecutor(private val mainHandler: Handler) : ThreadExecutor {
 
     override fun executeInBackground(task: () -> Unit) {
         Thread(task).start()
