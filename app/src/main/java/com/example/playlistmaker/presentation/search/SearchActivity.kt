@@ -17,8 +17,6 @@ import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.gson.Gson
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent.getKoin
 
 class SearchActivity : AppCompatActivity() {
 
@@ -65,12 +63,17 @@ class SearchActivity : AppCompatActivity() {
             binding.etSearch.text.clear()
             hideKeyboard()
             viewModel.clearSearch()
+            updateClearButtonVisibility("")
         }
 
         binding.clearHistButton.setOnClickListener {
             searchHistoryUseCase.clearHistory()
             loadSearchHistory()
         }
+    }
+
+    private fun updateClearButtonVisibility(query: CharSequence?) {
+        binding.clearImageButton.visibility = if (query.isNullOrEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun setupSearchTextWatcher() {
