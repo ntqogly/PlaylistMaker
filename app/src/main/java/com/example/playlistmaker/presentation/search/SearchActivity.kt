@@ -1,6 +1,7 @@
 package com.example.playlistmaker.presentation.search
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,8 +9,10 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
@@ -40,8 +43,8 @@ class SearchActivity : AppCompatActivity() {
         setupSearchTextWatcher()
         setupEditorActionListener()
         loadSearchHistory()
-
         observeViewModel()
+        setThemeSpecificImage(binding.ivNothingFound)
     }
 
     private fun setupRecyclerViews() {
@@ -186,6 +189,17 @@ class SearchActivity : AppCompatActivity() {
         currentFocus?.let { view ->
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    private fun setThemeSpecificImage(imageView: ImageView) {
+        val isNightMode = (resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+        if (isNightMode) {
+            imageView.setImageResource(R.drawable.img_search_dark)
+        } else {
+            imageView.setImageResource(R.drawable.img_search_light)
         }
     }
 }
