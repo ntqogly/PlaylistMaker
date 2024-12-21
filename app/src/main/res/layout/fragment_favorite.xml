@@ -3,18 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".presentation.media.FavoriteFragment">
 
     <ImageView
+        android:id="@+id/iv_no_result"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:src="@drawable/img_search" />
+        android:layout_marginTop="120dp"
+        android:src="@drawable/img_search_light" />
 
     <TextView
         style="@style/error_tv_style_media"
         android:layout_width="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_height="wrap_content"
         android:text="@string/empty_media" />
 
