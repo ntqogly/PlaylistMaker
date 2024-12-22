@@ -91,8 +91,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupSearchTextWatcher() {
-//        val handler = Handler(mainLooper)
-//        var searchRunnable: Runnable? = null
+        val handler = Handler(mainLooper)
+        var searchRunnable: Runnable? = null
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -102,13 +102,20 @@ class SearchActivity : AppCompatActivity() {
                     loadSearchHistory()
                     binding.clearImageButton.visibility = View.INVISIBLE
                     binding.linearLayoutSearch.visibility = View.GONE
+
+                    searchRunnable?.let { handler.removeCallbacks(it) }
                 } else {
                     binding.clearImageButton.visibility = View.VISIBLE
                     binding.linearLayoutHistory.visibility = View.GONE
 
-//                    searchRunnable?.let { handler.removeCallbacks(it) }
-//                    searchRunnable = Runnable { viewModel.searchTracks(s.toString()) }
-//                    handler.postDelayed(searchRunnable!!, 2000)
+                    searchRunnable?.let { handler.removeCallbacks(it) }
+                    searchRunnable = Runnable {
+                        if (s.isNotEmpty()) {
+                            viewModel.searchTracks(s.toString())
+                        }
+                    }
+                    handler.postDelayed(searchRunnable!!, 2000)
+
                 }
 
             }
