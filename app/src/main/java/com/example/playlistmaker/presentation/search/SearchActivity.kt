@@ -81,6 +81,8 @@ class SearchActivity : AppCompatActivity() {
                 showNoInternet()
             }
         }
+
+
     }
 
     private fun updateClearButtonVisibility(query: CharSequence?) {
@@ -103,18 +105,6 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
-//    private fun setupEditorActionListener() {
-//        binding.etSearch.setOnEditorActionListener { _, actionId, event ->
-//            if (actionId == EditorInfo.IME_ACTION_DONE || event?.keyCode == KeyEvent.KEYCODE_ENTER) {
-//                hideKeyboard()
-//                viewModel.searchTracks(binding.etSearch.text.toString())
-//                true
-//            } else {
-//                false
-//            }
-//        }
-//    }
-
     private fun setupEditorActionListener() {
         binding.etSearch.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || event?.keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -131,7 +121,6 @@ class SearchActivity : AppCompatActivity() {
         }
 
     }
-
 
     private fun observeViewModel() {
         viewModel.state.observe(this) { state ->
