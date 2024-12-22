@@ -113,7 +113,11 @@ class SearchActivity : AppCompatActivity() {
 
             }
 
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                searchRunnable?.let { handler.removeCallbacks(it) }
+                searchRunnable = Runnable { viewModel.searchTracks(s.toString()) }
+                handler.postDelayed(searchRunnable!!, 2000)
+            }
         })
     }
 

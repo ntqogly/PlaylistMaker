@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data.mapper
 
+import android.util.Log
 import com.example.playlistmaker.data.dto.TrackDTO
 import com.example.playlistmaker.domain.models.Track
 
@@ -20,6 +21,16 @@ class TrackMapper {
     }
 
     fun mapToDomainList(dtoList: List<TrackDTO>): List<Track> {
-        return dtoList.map { mapToDomain(it) }
+        val mappedList = dtoList.mapNotNull { dto ->
+            try {
+                mapToDomain(dto)
+            } catch (e: Exception) {
+                Log.e("TrackMapperError", "Error mapping DTO: ${e.message}")
+                null
+            }
+        }
+        return mappedList
     }
+
+
 }
