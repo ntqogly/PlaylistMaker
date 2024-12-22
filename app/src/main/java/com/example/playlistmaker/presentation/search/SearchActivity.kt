@@ -73,6 +73,14 @@ class SearchActivity : AppCompatActivity() {
             searchHistoryUseCase.clearHistory()
             loadSearchHistory()
         }
+
+        binding.refreshButton.setOnClickListener {
+            if (viewModel.checkInternetConnection()) {
+                viewModel.searchTracks(binding.etSearch.text.toString())
+            } else {
+                showNoInternet()
+            }
+        }
     }
 
     private fun updateClearButtonVisibility(query: CharSequence?) {
@@ -95,17 +103,35 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
+//    private fun setupEditorActionListener() {
+//        binding.etSearch.setOnEditorActionListener { _, actionId, event ->
+//            if (actionId == EditorInfo.IME_ACTION_DONE || event?.keyCode == KeyEvent.KEYCODE_ENTER) {
+//                hideKeyboard()
+//                viewModel.searchTracks(binding.etSearch.text.toString())
+//                true
+//            } else {
+//                false
+//            }
+//        }
+//    }
+
     private fun setupEditorActionListener() {
         binding.etSearch.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || event?.keyCode == KeyEvent.KEYCODE_ENTER) {
                 hideKeyboard()
-                viewModel.searchTracks(binding.etSearch.text.toString())
+                if (viewModel.checkInternetConnection()) {
+                    viewModel.searchTracks(binding.etSearch.text.toString())
+                } else {
+                    showNoInternet()
+                }
                 true
             } else {
                 false
             }
         }
+
     }
+
 
     private fun observeViewModel() {
         viewModel.state.observe(this) { state ->
@@ -185,6 +211,15 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun showNoInternet() {
+        with(binding) {
+            linearLayoutInternet.visibility = View.VISIBLE
+            rvTracks.visibility = View.GONE
+            linearLayoutSearch.visibility = View.GONE
+            linearLayoutHistory.visibility = View.GONE
+        }
+    }
+
     private fun hideKeyboard() {
         currentFocus?.let { view ->
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -193,8 +228,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setThemeSpecificImage(imageView: ImageView) {
-        val isNightMode = (resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val isNightMode =
+            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
         if (isNightMode) {
             imageView.setImageResource(R.drawable.img_search_dark)
