@@ -3,6 +3,7 @@ package com.example.playlistmaker.presentation.search
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -90,15 +91,26 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupSearchTextWatcher() {
+        val handler = Handler(mainLooper)
+        var searchRunnable: Runnable? = null
+
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     loadSearchHistory()
+                    binding.clearImageButton.visibility = View.INVISIBLE
+                    binding.linearLayoutSearch.visibility = View.GONE
                 } else {
                     binding.clearImageButton.visibility = View.VISIBLE
+                    binding.linearLayoutHistory.visibility = View.GONE
+
+                    searchRunnable?.let { handler.removeCallbacks(it) }
+                    searchRunnable = Runnable { viewModel.searchTracks(s.toString()) }
+                    handler.postDelayed(searchRunnable!!, 2000)
                 }
+
             }
 
             override fun afterTextChanged(s: Editable?) {}
