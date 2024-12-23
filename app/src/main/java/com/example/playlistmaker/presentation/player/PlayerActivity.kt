@@ -67,7 +67,7 @@ class PlayerActivity : AppCompatActivity() {
             tvArtistName.text = track.artistName
             trackDuration.text = formatTime(track.trackTimeMillis)
             trackAlbum.text = track.trackAlbum
-            trackReleaseDate.text = track.releaseDate.substring(0, 4)
+            trackReleaseDate.text = track.releaseDate?.substring(0, 4)
             trackGenre.text = track.genre
             trackCountry.text = track.trackCountry
 

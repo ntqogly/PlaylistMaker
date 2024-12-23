@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.api.ISearchTrackUseCase
+import com.example.playlistmaker.domain.api.TrackRepository
 import com.example.playlistmaker.domain.models.Track
 
 class SearchViewModel(
-    private val searchTrackUseCase: ISearchTrackUseCase
+    private val searchTrackUseCase: ISearchTrackUseCase,
+    private val trackRepository: TrackRepository
 ) : ViewModel() {
 
     private val _state = MutableLiveData<SearchState>()
@@ -28,6 +30,10 @@ class SearchViewModel(
 
     fun clearSearch() {
         _state.value = SearchState.Initial
+    }
+
+    fun checkInternetConnection(): Boolean {
+        return trackRepository.isInternetAvailable()
     }
 
     sealed class SearchState {

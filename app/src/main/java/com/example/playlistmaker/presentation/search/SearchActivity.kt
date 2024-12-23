@@ -1,15 +1,19 @@
 package com.example.playlistmaker.presentation.search
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
@@ -17,8 +21,6 @@ import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.gson.Gson
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent.getKoin
 
 class SearchActivity : AppCompatActivity() {
 
@@ -42,8 +44,8 @@ class SearchActivity : AppCompatActivity() {
         setupSearchTextWatcher()
         setupEditorActionListener()
         loadSearchHistory()
-
         observeViewModel()
+        setThemeSpecificImage(binding.ivNothingFound)
     }
 
     private fun setupRecyclerViews() {
@@ -65,24 +67,57 @@ class SearchActivity : AppCompatActivity() {
             binding.etSearch.text.clear()
             hideKeyboard()
             viewModel.clearSearch()
+            updateClearButtonVisibility("")
         }
 
         binding.clearHistButton.setOnClickListener {
             searchHistoryUseCase.clearHistory()
             loadSearchHistory()
         }
+
+        binding.refreshButton.setOnClickListener {
+            if (viewModel.checkInternetConnection()) {
+                viewModel.searchTracks(binding.etSearch.text.toString())
+            } else {
+                showNoInternet()
+            }
+        }
+
+
+    }
+
+    private fun updateClearButtonVisibility(query: CharSequence?) {
+        binding.clearImageButton.visibility = if (query.isNullOrEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun setupSearchTextWatcher() {
+        val handler = Handler(mainLooper)
+        var searchRunnable: Runnable? = null
+
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     loadSearchHistory()
+                    binding.clearImageButton.visibility = View.INVISIBLE
+                    binding.linearLayoutSearch.visibility = View.GONE
+
+                    searchRunnable?.let { handler.removeCallbacks(it) }
                 } else {
                     binding.clearImageButton.visibility = View.VISIBLE
+                    binding.linearLayoutHistory.visibility = View.GONE
+
+                    searchRunnable?.let { handler.removeCallbacks(it) }
+                    searchRunnable = Runnable {
+                        if (s.isNotEmpty()) {
+                            viewModel.searchTracks(s.toString())
+                        }
+                    }
+                    handler.postDelayed(searchRunnable!!, 2000)
+
                 }
+
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -93,12 +128,17 @@ class SearchActivity : AppCompatActivity() {
         binding.etSearch.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || event?.keyCode == KeyEvent.KEYCODE_ENTER) {
                 hideKeyboard()
-                viewModel.searchTracks(binding.etSearch.text.toString())
+                if (viewModel.checkInternetConnection()) {
+                    viewModel.searchTracks(binding.etSearch.text.toString())
+                } else {
+                    showNoInternet()
+                }
                 true
             } else {
                 false
             }
         }
+
     }
 
     private fun observeViewModel() {
@@ -179,10 +219,30 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun showNoInternet() {
+        with(binding) {
+            linearLayoutInternet.visibility = View.VISIBLE
+            rvTracks.visibility = View.GONE
+            linearLayoutSearch.visibility = View.GONE
+            linearLayoutHistory.visibility = View.GONE
+        }
+    }
+
     private fun hideKeyboard() {
         currentFocus?.let { view ->
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    private fun setThemeSpecificImage(imageView: ImageView) {
+        val isNightMode =
+            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+        if (isNightMode) {
+            imageView.setImageResource(R.drawable.img_search_dark)
+        } else {
+            imageView.setImageResource(R.drawable.img_search_light)
         }
     }
 }

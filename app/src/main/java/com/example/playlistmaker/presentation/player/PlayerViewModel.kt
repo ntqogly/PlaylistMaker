@@ -33,13 +33,15 @@ class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor, priva
     }
 
     fun setupPlayer(track: Track) {
-        playbackInteractor.setup(track.previewUrl) {
-            _state.postValue(
-                PlayerState.Active(
-                    playbackState = PlayerState.PlaybackState.PREPARED
+        track.previewUrl?.let {
+            playbackInteractor.setup(it) {
+                _state.postValue(
+                    PlayerState.Active(
+                        playbackState = PlayerState.PlaybackState.PREPARED
+                    )
                 )
-            )
-            stopTimer()
+                stopTimer()
+            }
         }
     }
 
