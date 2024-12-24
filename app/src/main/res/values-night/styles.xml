@@ -233,4 +233,11 @@
         <item name="tabTextColor">@color/white</item>
     </style>
 
+    <style name="bottom_navigation_style" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="android:background">@color/empty</item>
+        <item name="itemIconTint">@color/bottom_navigation_dark</item>
+        <item name="itemRippleColor">@color/blue</item>
+        <item name="itemTextColor">@color/bottom_navigation_dark</item>
+    </style>
+
 </resources>

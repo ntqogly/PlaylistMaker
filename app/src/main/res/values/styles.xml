@@ -246,4 +246,11 @@
         <item name="tabIndicatorColor">@color/black</item>
         <item name="tabTextColor">@color/black</item>
     </style>
+
+    <style name="bottom_navigation_style" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="android:background">@color/empty</item>
+        <item name="itemIconTint">@color/bottom_navigation_light</item>
+        <item name="itemRippleColor">@color/blue</item>
+        <item name="itemTextColor">@color/bottom_navigation_light</item>
+    </style>
 </resources>
