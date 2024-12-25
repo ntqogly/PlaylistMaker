@@ -2,13 +2,13 @@
     <item
         android:id="@+id/fragmentSearch"
         android:icon="@drawable/ic_search"
-        android:title="Поиск" />
+        android:title="@string/button_search" />
     <item
         android:id="@+id/fragmentMedia"
         android:icon="@drawable/ic_media"
-        android:title="Медиатека" />
+        android:title="@string/button_media" />
     <item
         android:id="@+id/fragmentSettings"
         android:icon="@drawable/ic_settings"
-        android:title="Настройки" />
+        android:title="@string/button_settings" />
 </menu>

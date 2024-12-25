@@ -29,17 +29,10 @@ class FragmentSettings : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        setupToolbar()
         observeViewModel()
         setupThemeSwitch()
         setupSupportButtons()
     }
-
-//    private fun setupToolbar() {
-//        binding.backButtonFromSettings.setOnClickListener {
-//            finish()
-//        }
-//    }
 
     private fun observeViewModel() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
