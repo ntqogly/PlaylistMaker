@@ -1,30 +1,38 @@
 package com.example.playlistmaker.presentation.search
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
 import com.example.playlistmaker.presentation.player.PlayerActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySearchBinding
+class FragmentSearch : Fragment() {
+
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
@@ -32,12 +40,15 @@ class SearchActivity : AppCompatActivity() {
     private val viewModel by viewModel<SearchViewModel>()
     private val searchHistoryUseCase: SearchHistoryUseCase by inject()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
 
-        binding.backButtonFromSearch.setOnClickListener { finish() }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerViews()
         setupListeners()
@@ -46,16 +57,38 @@ class SearchActivity : AppCompatActivity() {
         loadSearchHistory()
         observeViewModel()
         setThemeSpecificImage(binding.ivNothingFound)
+
+        bottomNavHide()
+
+    }
+
+    private fun bottomNavHide() {
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav)
+
+        val contentView = requireActivity().findViewById<FrameLayout>(android.R.id.content)
+        contentView.viewTreeObserver.addOnGlobalLayoutListener {
+            val r = Rect()
+            contentView.getWindowVisibleDisplayFrame(r)
+            val screenHeight = contentView.rootView.height
+            val keypadHeight = screenHeight - r.bottom
+
+            if (keypadHeight > screenHeight * 0.15) {
+                bottomNavigationView.visibility = View.GONE
+            } else {
+                bottomNavigationView.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun setupRecyclerViews() {
-        binding.rvTracks.layoutManager = LinearLayoutManager(this)
+        binding.rvTracks.layoutManager = LinearLayoutManager(requireContext())
         trackAdapter = TrackAdapter(mutableListOf()) { track ->
             openPlayerActivity(track)
         }
         binding.rvTracks.adapter = trackAdapter
 
-        binding.rvHistoryTracks.layoutManager = LinearLayoutManager(this)
+        binding.rvHistoryTracks.layoutManager = LinearLayoutManager(requireContext())
         historyAdapter = TrackAdapter(mutableListOf()) { track ->
             openPlayerActivity(track)
         }
@@ -91,7 +124,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupSearchTextWatcher() {
-        val handler = Handler(mainLooper)
+        val handler = Handler(requireContext().mainLooper)
         var searchRunnable: Runnable? = null
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
@@ -142,7 +175,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.state.observe(this) { state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is SearchViewModel.SearchState.Initial -> loadSearchHistory()
                 is SearchViewModel.SearchState.Loading -> binding.progressBarSearch.visibility =
@@ -175,7 +208,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun openPlayerActivity(track: Track) {
         searchHistoryUseCase.addTrackToHistory(track)
-        val intent = Intent(this, PlayerActivity::class.java).apply {
+        val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
             putExtra("TRACK_EXTRA", Gson().toJson(track))
         }
         startActivity(intent)
@@ -229,11 +262,13 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun hideKeyboard() {
-        currentFocus?.let { view ->
-            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        val view = requireActivity().currentFocus
+        if (view != null) {
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
+
 
     private fun setThemeSpecificImage(imageView: ImageView) {
         val isNightMode =
@@ -244,5 +279,9 @@ class SearchActivity : AppCompatActivity() {
         } else {
             imageView.setImageResource(R.drawable.img_search_light)
         }
+    }
+
+    companion object {
+
     }
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/settingsLayoutBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Toolbar
+        style="@style/header_style"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:title="@string/button_settings" />
+
+    <Switch
+        android:id="@+id/switch_theme"
+        style="@style/settings_layout_text_style"
+        android:text="@string/switcher_settingsLayout"
+        android:layout_marginTop="24dp"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <TextView
+        android:id="@+id/button_share_app"
+        style="@style/settings_layout_text_style"
+        android:text="@string/share"
+        app:drawableEndCompat="@drawable/ic_share" />
+
+    <TextView
+        android:id="@+id/button_support"
+        style="@style/settings_layout_text_style"
+        android:text="@string/support"
+        app:drawableEndCompat="@drawable/ic_support" />
+
+    <TextView
+        android:id="@+id/button_terms_of_use"
+        style="@style/settings_layout_text_style"
+        android:text="@string/termsOfUse"
+        app:drawableEndCompat="@drawable/ic_terms_of_use" />
+</LinearLayout>
