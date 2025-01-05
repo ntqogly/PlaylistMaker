@@ -3,6 +3,7 @@ package com.example.playlistmaker.presentation.player
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.domain.models.Track
@@ -71,10 +72,17 @@ class PlayerActivity : AppCompatActivity() {
             trackGenre.text = track.genre
             trackCountry.text = track.trackCountry
 
+
             Glide.with(this@PlayerActivity)
-                .load(track.artworkUrl100.replace("100x100", "600x600"))
+                .load(coverResolutionAmplifier(track.artworkUrl100))
+                .centerCrop()
+                .transform(RoundedCorners(10))
+                .placeholder(R.drawable.ic_place_holder)
                 .into(trackCover)
         }
+    }
+    private fun coverResolutionAmplifier(artworkUrl100: String?): String? {
+        return artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
     }
 
     private fun formatTime(milliseconds: Int): String {

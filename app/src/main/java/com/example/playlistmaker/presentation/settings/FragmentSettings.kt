@@ -1,38 +1,41 @@
 package com.example.playlistmaker.presentation.settings
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import com.example.playlistmaker.domain.api.ISupportInteractor
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+class FragmentSettings : Fragment() {
 
-    private lateinit var binding: ActivitySettingsBinding
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModel by viewModel<SettingsViewModel>()
     private val supportInteractor: ISupportInteractor by inject()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSettingsBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
 
-        setupToolbar()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         observeViewModel()
         setupThemeSwitch()
         setupSupportButtons()
     }
 
-    private fun setupToolbar() {
-        binding.backButtonFromSettings.setOnClickListener {
-            finish()
-        }
-    }
-
     private fun observeViewModel() {
-        viewModel.state.observe(this) { state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             binding.switchTheme.isChecked = state.isDarkMode
         }
     }
@@ -70,5 +73,10 @@ class SettingsActivity : AppCompatActivity() {
             type = "text/plain"
         }
         startActivity(android.content.Intent.createChooser(shareIntent, null))
+    }
+
+
+    companion object {
+
     }
 }

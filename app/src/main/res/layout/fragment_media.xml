@@ -6,18 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".presentation.media.MediaActivity"
+    tools:context=".presentation.media.FragmentMedia"
     tools:ignore="UseCompoundDrawables">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_media"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:background="@color/empty"
-        app:navigationIcon="@drawable/ic_arrow_back"
+        android:gravity="center_vertical"
         app:title="@string/media"
-        app:titleMargin="12dp"
-        app:titleTextAppearance="@style/media_header_tv_style" />
+        app:titleTextAppearance="@style/header_style" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
