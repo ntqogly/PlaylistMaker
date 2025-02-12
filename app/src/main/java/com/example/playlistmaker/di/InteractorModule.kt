@@ -12,7 +12,7 @@ import com.example.playlistmaker.domain.usecases.ThemeInteractor
 import org.koin.dsl.module
 
 val interactorModule = module {
-    single<ISearchTrackUseCase> { SearchTrackUseCase(get(), get()) }
+    single<ISearchTrackUseCase> { SearchTrackUseCase(get()) }
     single { PlaybackInteractor(get()) }
     single<IPlaybackInteractor> { MediaPlayerRepository(get()) }
     single<ISupportInteractor> { SupportInteractor(get()) }

@@ -5,25 +5,44 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.models.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor, private val handler:Handler) : ViewModel() {
+class PlayerViewModel(
+    private val playbackInteractor: IPlaybackInteractor, private val handler: Handler
+) : ViewModel() {
 
     private val _state = MutableLiveData<PlayerState>()
     val state: LiveData<PlayerState> get() = _state
 
-    private val updateTimeRunnable = object : Runnable {
-        override fun run() {
+    private var progressJob: Job? = null
+
+
+    private suspend fun updateTimeRunnable() {
+        while (playbackInteractor.isPlaying()) {
             val currentTime = playbackInteractor.getCurrentTimeFormatted()
             _state.postValue(
                 PlayerState.Active(
-                    playbackState = PlayerState.PlaybackState.PLAYING,
-                    currentTime = currentTime
+                    playbackState = PlayerState.PlaybackState.PLAYING, currentTime = currentTime
                 )
             )
-            handler.postDelayed(this, 1000)
+            delay(300)
         }
+
+//        override fun run() {
+//            val currentTime = playbackInteractor.getCurrentTimeFormatted()
+//            _state.postValue(
+//                PlayerState.Active(
+//                    playbackState = PlayerState.PlaybackState.PLAYING,
+//                    currentTime = currentTime
+//                )
+//            )
+//            handler.postDelayed(this, 1000)
+//        }
     }
 
     init {
@@ -68,11 +87,12 @@ class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor, priva
     }
 
     private fun startTimer() {
-        handler.post(updateTimeRunnable)
+        progressJob?.cancel()
+        progressJob = viewModelScope.launch { updateTimeRunnable() }
     }
 
     private fun stopTimer() {
-        handler.removeCallbacks(updateTimeRunnable)
+        progressJob?.cancel()
     }
 
     fun stopPlayback() {
