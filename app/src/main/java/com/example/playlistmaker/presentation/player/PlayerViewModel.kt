@@ -36,7 +36,8 @@ class PlayerViewModel(
 
     init {
         _state.value = PlayerState.Active(
-            playbackState = PlayerState.PlaybackState.PREPARED
+            playbackState = PlayerState.PlaybackState.PREPARED,
+            currentTime = "00:00"
         )
     }
 
@@ -45,7 +46,8 @@ class PlayerViewModel(
             playbackInteractor.setup(it) {
                 _state.postValue(
                     PlayerState.Active(
-                        playbackState = PlayerState.PlaybackState.PREPARED
+                        playbackState = PlayerState.PlaybackState.PREPARED,
+                        currentTime = "00:00"
                     )
                 )
                 stopTimer()
@@ -56,9 +58,11 @@ class PlayerViewModel(
     fun play() {
         playbackInteractor.play {
             startTimer()
+            val currentTime = playbackInteractor.getCurrentTimeFormatted()
             _state.postValue(
                 PlayerState.Active(
-                    playbackState = PlayerState.PlaybackState.PLAYING
+                    playbackState = PlayerState.PlaybackState.PLAYING,
+                    currentTime = currentTime
                 )
             )
         }
@@ -67,9 +71,11 @@ class PlayerViewModel(
     fun pause() {
         playbackInteractor.pause {
             stopTimer()
+            val currentTime = playbackInteractor.getCurrentTimeFormatted()
             _state.postValue(
                 PlayerState.Active(
-                    playbackState = PlayerState.PlaybackState.PAUSED
+                    playbackState = PlayerState.PlaybackState.PAUSED,
+                    currentTime = currentTime
                 )
             )
         }
@@ -89,7 +95,8 @@ class PlayerViewModel(
         stopTimer()
         _state.postValue(
             PlayerState.Active(
-                playbackState = PlayerState.PlaybackState.STOPPED
+                playbackState = PlayerState.PlaybackState.STOPPED,
+                currentTime = "00:00"
             )
         )
     }
