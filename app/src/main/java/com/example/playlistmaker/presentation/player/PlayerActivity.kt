@@ -90,6 +90,15 @@ class PlayerActivity : AppCompatActivity() {
         val seconds = (milliseconds / 1000) % 60
         return String.format("%02d:%02d", minutes, seconds)
     }
+
+    override fun onPause() {
+        super.onPause()
+        if (viewModel.state.value is PlayerState.Active &&
+            (viewModel.state.value as PlayerState.Active).playbackState == PlayerState.PlaybackState.PLAYING
+        ) {
+            viewModel.pause()
+        }
+    }
 }
 
 

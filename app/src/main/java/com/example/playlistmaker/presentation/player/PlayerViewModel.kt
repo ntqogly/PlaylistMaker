@@ -32,17 +32,6 @@ class PlayerViewModel(
             )
             delay(300)
         }
-
-//        override fun run() {
-//            val currentTime = playbackInteractor.getCurrentTimeFormatted()
-//            _state.postValue(
-//                PlayerState.Active(
-//                    playbackState = PlayerState.PlaybackState.PLAYING,
-//                    currentTime = currentTime
-//                )
-//            )
-//            handler.postDelayed(this, 1000)
-//        }
     }
 
     init {
