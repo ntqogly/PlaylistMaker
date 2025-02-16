@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -209,6 +210,7 @@ class FragmentSearch : Fragment() {
 
     private fun observeViewModel() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
+            Log.d("SEARCH_STATE", "Текущее состояние: $state") // ✅ Логируем состояние
             when (state) {
                 is SearchViewModel.SearchState.Initial -> loadSearchHistory()
                 is SearchViewModel.SearchState.Loading -> binding.progressBarSearch.visibility =
@@ -223,6 +225,10 @@ class FragmentSearch : Fragment() {
                 is SearchViewModel.SearchState.Empty -> {
                     binding.progressBarSearch.visibility = View.GONE
                     showNothingFound()
+                }
+                is SearchViewModel.SearchState.NoInternet -> { // ✅ Добавляем обработку ошибки сети
+                    binding.progressBarSearch.visibility = View.GONE
+                    showNoInternet()
                 }
             }
         }

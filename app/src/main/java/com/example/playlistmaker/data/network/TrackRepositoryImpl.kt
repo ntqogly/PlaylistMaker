@@ -28,16 +28,6 @@ class TrackRepositoryImpl(
         }
     }
 
-//    override fun searchTrack(expression: String): List<Track> {
-//        val response = networkClient.searchTrack(TrackSearchRequest(expression))
-//        if (response.resultCode == 200 && response is TrackResponse) {
-//            return trackMapper.mapToDomainList(response.results)
-//        } else {
-//            isInternetAvailable()
-//        }
-//        return emptyList()
-//    }
-
     override fun isInternetAvailable(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

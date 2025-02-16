@@ -11,6 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class SearchViewModel(
     private val searchTrackUseCase: ISearchTrackUseCase,
@@ -27,34 +28,28 @@ class SearchViewModel(
         searchJob = viewModelScope.launch {
             delay(1000)
             _state.value = SearchState.Loading
-
             searchTrackUseCase.execute(query)
-                .catch { _state.postValue(SearchState.Empty) }
+                .catch { e ->
+                    if (e is IOException) {
+                        _state.postValue(SearchState.NoInternet)
+                    } else {
+                        _state.postValue(SearchState.Empty)
+                    }
+                }
                 .collect { result ->
+                    val hasInternet = trackRepository.isInternetAvailable()
                     _state.postValue(
-                        if (result.isNotEmpty()) {
-                            SearchState.Success(result)
-                        } else {
-                            SearchState.Empty
+                        when {
+                            !hasInternet -> SearchState.NoInternet
+                            result.isNotEmpty() -> SearchState.Success(result)
+                            else -> SearchState.Empty
                         }
                     )
                 }
+
+
         }
     }
-
-
-//    fun searchTracks(query: String) {
-//        _state.value = SearchState.Loading
-//        searchTrackUseCase.executeAsync(query) { result ->
-//            _state.postValue(
-//                if (result.isNotEmpty()) {
-//                    SearchState.Success(result)
-//                } else {
-//                    SearchState.Empty
-//                }
-//            )
-//        }
-//    }
 
     fun clearSearch() {
         searchJob?.cancel()
@@ -70,5 +65,6 @@ class SearchViewModel(
         data object Loading : SearchState()
         data class Success(val tracks: List<Track>) : SearchState()
         data object Empty : SearchState()
+        data object NoInternet : SearchState()
     }
 }
