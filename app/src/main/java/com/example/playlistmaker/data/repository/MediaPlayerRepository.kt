@@ -5,7 +5,7 @@ class MediaPlayerRepository(private val mediaPlayer: MediaPlayer) : IPlaybackInt
     private var isPlaying = false
 
     override fun setup(url: String, onComplete: () -> Unit) {
-//        mediaPlayer.reset()
+        mediaPlayer.reset()
         mediaPlayer.setDataSource(url)
         mediaPlayer.setOnPreparedListener {
             onComplete()

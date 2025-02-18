@@ -1,7 +1,8 @@
 package com.example.playlistmaker.domain.api
 
 import com.example.playlistmaker.domain.models.Track
+import kotlinx.coroutines.flow.Flow
 
 interface ISearchTrackUseCase {
-    fun executeAsync(expression: String, callback: (tracks: List<Track>) -> Unit)
+    suspend fun execute(expression: String): Flow<List<Track>>
 }

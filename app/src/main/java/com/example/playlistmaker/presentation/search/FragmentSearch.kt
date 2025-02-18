@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
@@ -25,6 +27,11 @@ import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
 import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -39,6 +46,9 @@ class FragmentSearch : Fragment() {
 
     private val viewModel by viewModel<SearchViewModel>()
     private val searchHistoryUseCase: SearchHistoryUseCase by inject()
+
+
+    private var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -115,8 +125,6 @@ class FragmentSearch : Fragment() {
                 showNoInternet()
             }
         }
-
-
     }
 
     private fun updateClearButtonVisibility(query: CharSequence?) {
@@ -124,9 +132,6 @@ class FragmentSearch : Fragment() {
     }
 
     private fun setupSearchTextWatcher() {
-        val handler = Handler(requireContext().mainLooper)
-        var searchRunnable: Runnable? = null
-
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -135,27 +140,56 @@ class FragmentSearch : Fragment() {
                     loadSearchHistory()
                     binding.clearImageButton.visibility = View.INVISIBLE
                     binding.linearLayoutSearch.visibility = View.GONE
-
-                    searchRunnable?.let { handler.removeCallbacks(it) }
+                    searchJob?.cancel()
                 } else {
                     binding.clearImageButton.visibility = View.VISIBLE
                     binding.linearLayoutHistory.visibility = View.GONE
 
-                    searchRunnable?.let { handler.removeCallbacks(it) }
-                    searchRunnable = Runnable {
-                        if (s.isNotEmpty()) {
-                            viewModel.searchTracks(s.toString())
-                        }
+                    searchJob?.cancel()
+                    searchJob = viewLifecycleOwner.lifecycleScope.launch {
+                        delay(2000)
+                        viewModel.searchTracks(s.toString())
                     }
-                    handler.postDelayed(searchRunnable!!, 2000)
-
                 }
-
             }
 
             override fun afterTextChanged(s: Editable?) {}
         })
     }
+
+//    private fun setupSearchTextWatcher() {
+//        val handler = Handler(requireContext().mainLooper)
+//        var searchRunnable: Runnable? = null
+//
+//        binding.etSearch.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                if (s.isNullOrEmpty()) {
+//                    loadSearchHistory()
+//                    binding.clearImageButton.visibility = View.INVISIBLE
+//                    binding.linearLayoutSearch.visibility = View.GONE
+//
+//                    searchRunnable?.let { handler.removeCallbacks(it) }
+//                } else {
+//                    binding.clearImageButton.visibility = View.VISIBLE
+//                    binding.linearLayoutHistory.visibility = View.GONE
+//
+//                    searchRunnable?.let { handler.removeCallbacks(it) }
+//                    searchRunnable = Runnable {
+//                        if (s.isNotEmpty()) {
+//                            viewModel.searchTracks(s.toString())
+//                        }
+//                    }
+//                    handler.postDelayed(searchRunnable!!, 2000)
+//
+//                }
+//
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {}
+//        })
+//    }
 
     private fun setupEditorActionListener() {
         binding.etSearch.setOnEditorActionListener { _, actionId, event ->
@@ -176,6 +210,7 @@ class FragmentSearch : Fragment() {
 
     private fun observeViewModel() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
+            Log.d("SEARCH_STATE", "Текущее состояние: $state") // ✅ Логируем состояние
             when (state) {
                 is SearchViewModel.SearchState.Initial -> loadSearchHistory()
                 is SearchViewModel.SearchState.Loading -> binding.progressBarSearch.visibility =
@@ -190,6 +225,10 @@ class FragmentSearch : Fragment() {
                 is SearchViewModel.SearchState.Empty -> {
                     binding.progressBarSearch.visibility = View.GONE
                     showNothingFound()
+                }
+                is SearchViewModel.SearchState.NoInternet -> { // ✅ Добавляем обработку ошибки сети
+                    binding.progressBarSearch.visibility = View.GONE
+                    showNoInternet()
                 }
             }
         }
@@ -264,7 +303,8 @@ class FragmentSearch : Fragment() {
     private fun hideKeyboard() {
         val view = requireActivity().currentFocus
         if (view != null) {
-            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
@@ -279,9 +319,5 @@ class FragmentSearch : Fragment() {
         } else {
             imageView.setImageResource(R.drawable.img_search_light)
         }
-    }
-
-    companion object {
-
     }
 }

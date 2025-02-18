@@ -8,6 +8,10 @@ import com.example.playlistmaker.data.dto.TrackSearchRequest
 import com.example.playlistmaker.data.mapper.TrackMapper
 import com.example.playlistmaker.domain.api.TrackRepository
 import com.example.playlistmaker.domain.models.Track
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 
 class TrackRepositoryImpl(
     private val networkClient: NetworkClient,
@@ -15,14 +19,13 @@ class TrackRepositoryImpl(
     private val context: Context
 ) : TrackRepository {
 
-    override fun searchTrack(expression: String): List<Track> {
-        val response = networkClient.searchTrack(TrackSearchRequest(expression))
+    override fun searchTrack(expression: String): Flow<List<Track>> = flow {
+        val response = withContext(Dispatchers.IO) { networkClient.searchTrack(TrackSearchRequest(expression)) }
         if (response.resultCode == 200 && response is TrackResponse) {
-            return trackMapper.mapToDomainList(response.results)
+            emit(trackMapper.mapToDomainList(response.results))
         } else {
-            isInternetAvailable()
+            emit(emptyList())
         }
-        return emptyList()
     }
 
     override fun isInternetAvailable(): Boolean {

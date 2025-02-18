@@ -5,30 +5,39 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.models.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor, private val handler:Handler) : ViewModel() {
+class PlayerViewModel(
+    private val playbackInteractor: IPlaybackInteractor, private val handler: Handler
+) : ViewModel() {
 
     private val _state = MutableLiveData<PlayerState>()
     val state: LiveData<PlayerState> get() = _state
 
-    private val updateTimeRunnable = object : Runnable {
-        override fun run() {
+    private var progressJob: Job? = null
+
+
+    private suspend fun updateTimeRunnable() {
+        while (playbackInteractor.isPlaying()) {
             val currentTime = playbackInteractor.getCurrentTimeFormatted()
             _state.postValue(
                 PlayerState.Active(
-                    playbackState = PlayerState.PlaybackState.PLAYING,
-                    currentTime = currentTime
+                    playbackState = PlayerState.PlaybackState.PLAYING, currentTime = currentTime
                 )
             )
-            handler.postDelayed(this, 1000)
+            delay(300)
         }
     }
 
     init {
         _state.value = PlayerState.Active(
-            playbackState = PlayerState.PlaybackState.PREPARED
+            playbackState = PlayerState.PlaybackState.PREPARED,
+            currentTime = "00:00"
         )
     }
 
@@ -37,7 +46,8 @@ class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor, priva
             playbackInteractor.setup(it) {
                 _state.postValue(
                     PlayerState.Active(
-                        playbackState = PlayerState.PlaybackState.PREPARED
+                        playbackState = PlayerState.PlaybackState.PREPARED,
+                        currentTime = "00:00"
                     )
                 )
                 stopTimer()
@@ -48,9 +58,11 @@ class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor, priva
     fun play() {
         playbackInteractor.play {
             startTimer()
+            val currentTime = playbackInteractor.getCurrentTimeFormatted()
             _state.postValue(
                 PlayerState.Active(
-                    playbackState = PlayerState.PlaybackState.PLAYING
+                    playbackState = PlayerState.PlaybackState.PLAYING,
+                    currentTime = currentTime
                 )
             )
         }
@@ -59,20 +71,23 @@ class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor, priva
     fun pause() {
         playbackInteractor.pause {
             stopTimer()
+            val currentTime = playbackInteractor.getCurrentTimeFormatted()
             _state.postValue(
                 PlayerState.Active(
-                    playbackState = PlayerState.PlaybackState.PAUSED
+                    playbackState = PlayerState.PlaybackState.PAUSED,
+                    currentTime = currentTime
                 )
             )
         }
     }
 
     private fun startTimer() {
-        handler.post(updateTimeRunnable)
+        progressJob?.cancel()
+        progressJob = viewModelScope.launch { updateTimeRunnable() }
     }
 
     private fun stopTimer() {
-        handler.removeCallbacks(updateTimeRunnable)
+        progressJob?.cancel()
     }
 
     fun stopPlayback() {
@@ -80,7 +95,8 @@ class PlayerViewModel(private val playbackInteractor: IPlaybackInteractor, priva
         stopTimer()
         _state.postValue(
             PlayerState.Active(
-                playbackState = PlayerState.PlaybackState.STOPPED
+                playbackState = PlayerState.PlaybackState.STOPPED,
+                currentTime = "00:00"
             )
         )
     }
