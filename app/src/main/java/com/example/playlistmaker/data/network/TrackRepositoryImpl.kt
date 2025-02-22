@@ -3,6 +3,7 @@ package com.example.playlistmaker.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.example.playlistmaker.data.db.FavoriteTrackDao
 import com.example.playlistmaker.data.dto.TrackResponse
 import com.example.playlistmaker.data.dto.TrackSearchRequest
 import com.example.playlistmaker.data.mapper.TrackMapper
@@ -16,17 +17,35 @@ import kotlinx.coroutines.withContext
 class TrackRepositoryImpl(
     private val networkClient: NetworkClient,
     private val trackMapper: TrackMapper,
-    private val context: Context
+    private val context: Context,
+    private val favoriteTrackDao: FavoriteTrackDao
 ) : TrackRepository {
 
+    //    override fun searchTrack(expression: String): Flow<List<Track>> = flow {
+//        val response = withContext(Dispatchers.IO) { networkClient.searchTrack(TrackSearchRequest(expression)) }
+//        if (response.resultCode == 200 && response is TrackResponse) {
+//            emit(trackMapper.mapToDomainList(response.results))
+//        } else {
+//            emit(emptyList())
+//        }
+//    }
     override fun searchTrack(expression: String): Flow<List<Track>> = flow {
-        val response = withContext(Dispatchers.IO) { networkClient.searchTrack(TrackSearchRequest(expression)) }
+        val response =
+            withContext(Dispatchers.IO) { networkClient.searchTrack(TrackSearchRequest(expression)) }
         if (response.resultCode == 200 && response is TrackResponse) {
-            emit(trackMapper.mapToDomainList(response.results))
+            val trackList = trackMapper.mapToDomainList(response.results)
+            val favoriteTrackIds =
+                withContext(Dispatchers.IO) { favoriteTrackDao.getFavoriteTrackIds() }.toSet()
+            trackList.forEach { track ->
+                track.isFavorite = favoriteTrackIds.contains(track.trackId.toLong())
+            }
+
+            emit(trackList)
         } else {
             emit(emptyList())
         }
     }
+
 
     override fun isInternetAvailable(): Boolean {
         val connectivityManager =

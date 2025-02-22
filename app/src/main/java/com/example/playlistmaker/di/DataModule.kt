@@ -5,6 +5,8 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import androidx.room.Room
+import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.mapper.TrackMapper
 import com.example.playlistmaker.data.network.ITunesApiService
 import com.example.playlistmaker.data.network.NetworkClient
@@ -50,4 +52,13 @@ val dataModule = module {
     single { MediaPlayer() }
     single { MediaPlayerRepository(get()) }
 
+    single {
+        println("koin создание бд")
+        Room.databaseBuilder(
+            androidContext(), AppDatabase::class.java, "database.db"
+        ).fallbackToDestructiveMigration().build()
+            .also { println("koin бд создана") }
+    }
+
+    single { get<AppDatabase>().favoriteTrackDao() }
 }

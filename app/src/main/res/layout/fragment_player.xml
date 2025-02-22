@@ -94,7 +94,7 @@
             style="@style/player_layout_small_button_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/button_liked_track"
+            android:src="@drawable/button_like_track"
             app:layout_constraintBottom_toBottomOf="@+id/button_play_track"
             app:layout_constraintEnd_toStartOf="@+id/gl_end_for_track_cover"
             app:layout_constraintStart_toEndOf="@+id/button_play_track"

@@ -6,14 +6,20 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.domain.api.IFavoriteTrackInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
     private val viewModel by viewModel<PlayerViewModel>()
+
+    private val favoriteTrackInteractor: IFavoriteTrackInteractor by inject()
+    private var isFavorite = false
+    private lateinit var track: Track
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +45,9 @@ class PlayerActivity : AppCompatActivity() {
         binding.tbPlayer.setNavigationOnClickListener {
             finish()
         }
-
+        binding.buttonLikeTrack.setOnClickListener {
+            viewModel.onFavoriteClicked(track)
+        }
         observeViewModel()
     }
 
@@ -51,6 +59,11 @@ class PlayerActivity : AppCompatActivity() {
                     binding.currentTime.text = state.currentTime
                 }
             }
+        }
+        viewModel.isFavorite.observe(this) { isFavorite ->
+            val icon =
+                if (isFavorite) R.drawable.button_liked_track else R.drawable.button_like_track
+            binding.buttonLikeTrack.setImageResource(icon)
         }
     }
 
@@ -73,14 +86,21 @@ class PlayerActivity : AppCompatActivity() {
             trackCountry.text = track.trackCountry
 
 
-            Glide.with(this@PlayerActivity)
-                .load(coverResolutionAmplifier(track.artworkUrl100))
-                .centerCrop()
-                .transform(RoundedCorners(10))
-                .placeholder(R.drawable.ic_place_holder)
+            Glide.with(this@PlayerActivity).load(coverResolutionAmplifier(track.artworkUrl100))
+                .centerCrop().transform(RoundedCorners(10)).placeholder(R.drawable.ic_place_holder)
                 .into(trackCover)
         }
     }
+
+    private fun updateFavoriteButton() {
+        val iconRes = if (isFavorite) {
+            R.drawable.button_liked_track
+        } else {
+            R.drawable.button_like_track
+        }
+        binding.buttonLikeTrack.setImageResource(iconRes)
+    }
+
     private fun coverResolutionAmplifier(artworkUrl100: String?): String? {
         return artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
     }
@@ -93,9 +113,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (viewModel.state.value is PlayerState.Active &&
-            (viewModel.state.value as PlayerState.Active).playbackState == PlayerState.PlaybackState.PLAYING
-        ) {
+        if (viewModel.state.value is PlayerState.Active && (viewModel.state.value as PlayerState.Active).playbackState == PlayerState.PlaybackState.PLAYING) {
             viewModel.pause()
         }
     }

@@ -15,12 +15,11 @@ class PlaylistMakerApplication : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@PlaylistMakerApplication)
-            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
+            modules(
+                dataModule, repositoryModule, interactorModule, viewModelModule
+            )
         }
         val themeInteractor: ThemeInteractor = getKoin().get()
         themeInteractor.applySavedTheme()
-
     }
-
-
 }

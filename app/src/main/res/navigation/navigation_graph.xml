@@ -9,7 +9,11 @@
         android:id="@+id/fragmentSearch"
         android:name="com.example.playlistmaker.presentation.search.FragmentSearch"
         android:label="fragment_single_main"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_fragmentSearch_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/fragmentMedia"
         android:name="com.example.playlistmaker.presentation.media.FragmentMedia"
@@ -20,5 +24,12 @@
         android:name="com.example.playlistmaker.presentation.settings.FragmentSettings"
         android:label="fragment_single_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.example.playlistmaker.presentation.player.FragmentPlayer"
+        android:label="fragment_player"
+        tools:layout="@layout/fragment_player">
+
+    </fragment>
 
 </navigation>
