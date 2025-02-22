@@ -1,6 +1,7 @@
 package com.example.playlistmaker.data.mapper
 
 import android.util.Log
+import com.example.playlistmaker.data.db.FavoriteTrackEntity
 import com.example.playlistmaker.data.dto.TrackDTO
 import com.example.playlistmaker.domain.models.Track
 
@@ -16,7 +17,8 @@ class TrackMapper {
             trackAlbum = dto.trackAlbum,
             genre = dto.genre,
             releaseDate = dto.releaseDate,
-            previewUrl = dto.previewUrl
+            previewUrl = dto.previewUrl,
+            isFavorite = false
         )
     }
 
@@ -32,5 +34,35 @@ class TrackMapper {
         return mappedList
     }
 
+    fun mapFromEntity(entity: FavoriteTrackEntity): Track {
+        return Track(
+            trackId = entity.trackId.toInt(),
+            trackName = entity.trackName,
+            artistName = entity.artistName,
+            trackTimeMillis = entity.trackTimeMillis,
+            artworkUrl100 = entity.artworkUrl100,
+            trackCountry = entity.trackCountry,
+            trackAlbum = entity.trackAlbum,
+            genre = entity.genre,
+            releaseDate = entity.releaseDate,
+            previewUrl = entity.previewUrl,
+            isFavorite = true
+        )
+    }
+
+    fun mapToEntity(track: Track): FavoriteTrackEntity {
+        return FavoriteTrackEntity(
+            trackId = track.trackId.toLong(),
+            trackName = track.trackName,
+            artistName = track.artistName,
+            trackTimeMillis = track.trackTimeMillis,
+            artworkUrl100 = track.artworkUrl100,
+            trackCountry = track.trackCountry,
+            trackAlbum = track.trackAlbum,
+            genre = track.genre,
+            releaseDate = track.releaseDate,
+            previewUrl = track.previewUrl
+        )
+    }
 
 }

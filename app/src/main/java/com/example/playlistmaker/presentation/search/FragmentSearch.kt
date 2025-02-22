@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -27,8 +26,6 @@ import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
 import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -210,7 +207,6 @@ class FragmentSearch : Fragment() {
 
     private fun observeViewModel() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            Log.d("SEARCH_STATE", "Текущее состояние: $state") // ✅ Логируем состояние
             when (state) {
                 is SearchViewModel.SearchState.Initial -> loadSearchHistory()
                 is SearchViewModel.SearchState.Loading -> binding.progressBarSearch.visibility =
@@ -226,7 +222,8 @@ class FragmentSearch : Fragment() {
                     binding.progressBarSearch.visibility = View.GONE
                     showNothingFound()
                 }
-                is SearchViewModel.SearchState.NoInternet -> { // ✅ Добавляем обработку ошибки сети
+
+                is SearchViewModel.SearchState.NoInternet -> {
                     binding.progressBarSearch.visibility = View.GONE
                     showNoInternet()
                 }
@@ -251,6 +248,10 @@ class FragmentSearch : Fragment() {
             putExtra("TRACK_EXTRA", Gson().toJson(track))
         }
         startActivity(intent)
+//        val bundle = Bundle().apply {
+//            putString("TRACK_EXTRA", Gson().toJson(track))
+//        }
+//        findNavController().navigate(R.id.action_fragmentSearch_to_playerFragment, bundle)
     }
 
     private fun showTrackList() {

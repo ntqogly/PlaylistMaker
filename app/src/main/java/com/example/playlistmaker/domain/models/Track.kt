@@ -10,5 +10,6 @@ data class Track(
     val trackAlbum: String,
     val genre: String,
     val releaseDate: String?,
-    val previewUrl: String?
+    val previewUrl: String?,
+    var isFavorite: Boolean = false
 )

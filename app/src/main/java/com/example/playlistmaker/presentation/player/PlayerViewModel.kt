@@ -1,11 +1,10 @@
 package com.example.playlistmaker.presentation.player
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.domain.api.IFavoriteTrackInteractor
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.Job
@@ -13,14 +12,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
-    private val playbackInteractor: IPlaybackInteractor, private val handler: Handler
+    private val playbackInteractor: IPlaybackInteractor,
+    private val favoriteTrackInteractor: IFavoriteTrackInteractor
 ) : ViewModel() {
 
     private val _state = MutableLiveData<PlayerState>()
     val state: LiveData<PlayerState> get() = _state
 
-    private var progressJob: Job? = null
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val isFavorite: LiveData<Boolean> get() = _isFavorite
 
+    private var progressJob: Job? = null
+    private var currentTrack: Track? = null
 
     private suspend fun updateTimeRunnable() {
         while (playbackInteractor.isPlaying()) {
@@ -36,8 +39,7 @@ class PlayerViewModel(
 
     init {
         _state.value = PlayerState.Active(
-            playbackState = PlayerState.PlaybackState.PREPARED,
-            currentTime = "00:00"
+            playbackState = PlayerState.PlaybackState.PREPARED, currentTime = "00:00"
         )
     }
 
@@ -46,12 +48,15 @@ class PlayerViewModel(
             playbackInteractor.setup(it) {
                 _state.postValue(
                     PlayerState.Active(
-                        playbackState = PlayerState.PlaybackState.PREPARED,
-                        currentTime = "00:00"
+                        playbackState = PlayerState.PlaybackState.PREPARED, currentTime = "00:00"
                     )
                 )
                 stopTimer()
             }
+        }
+        viewModelScope.launch {
+            val isTrackFavorite = favoriteTrackInteractor.isTrackFavorite(track.trackId.toString())
+            _isFavorite.postValue(isTrackFavorite)
         }
     }
 
@@ -61,8 +66,7 @@ class PlayerViewModel(
             val currentTime = playbackInteractor.getCurrentTimeFormatted()
             _state.postValue(
                 PlayerState.Active(
-                    playbackState = PlayerState.PlaybackState.PLAYING,
-                    currentTime = currentTime
+                    playbackState = PlayerState.PlaybackState.PLAYING, currentTime = currentTime
                 )
             )
         }
@@ -74,12 +78,24 @@ class PlayerViewModel(
             val currentTime = playbackInteractor.getCurrentTimeFormatted()
             _state.postValue(
                 PlayerState.Active(
-                    playbackState = PlayerState.PlaybackState.PAUSED,
-                    currentTime = currentTime
+                    playbackState = PlayerState.PlaybackState.PAUSED, currentTime = currentTime
                 )
             )
         }
     }
+
+    fun onFavoriteClicked(track: Track) {
+        viewModelScope.launch {
+            val currentState = _isFavorite.value ?: false
+            if (currentState) {
+                favoriteTrackInteractor.removeTrackFromFavorites(track)
+            } else {
+                favoriteTrackInteractor.addTrackToFavorites(track)
+            }
+            _isFavorite.postValue(!currentState)
+        }
+    }
+
 
     private fun startTimer() {
         progressJob?.cancel()
@@ -95,8 +111,7 @@ class PlayerViewModel(
         stopTimer()
         _state.postValue(
             PlayerState.Active(
-                playbackState = PlayerState.PlaybackState.STOPPED,
-                currentTime = "00:00"
+                playbackState = PlayerState.PlaybackState.STOPPED, currentTime = "00:00"
             )
         )
     }
