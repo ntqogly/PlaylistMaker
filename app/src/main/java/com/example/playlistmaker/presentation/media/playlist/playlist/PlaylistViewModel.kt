@@ -19,11 +19,16 @@ class PlaylistViewModel(
         loadPlaylists()
     }
 
-    private fun loadPlaylists() {
+    fun loadPlaylists() {
         viewModelScope.launch {
             playlistInteractor.getAllPlaylists().collect { playlists ->
                 _playlists.value = playlists
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        loadPlaylists() // 🔹 Гарантируем актуальные данные при уничтожении VM
     }
 }
