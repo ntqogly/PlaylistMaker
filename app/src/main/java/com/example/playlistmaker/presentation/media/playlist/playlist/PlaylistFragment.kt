@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.media
+package com.example.playlistmaker.presentation.media.playlist.playlist
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -7,8 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
+import com.example.playlistmaker.domain.models.Playlist
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistFragment : Fragment() {
@@ -17,6 +23,8 @@ class PlaylistFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel by viewModel<PlaylistViewModel>()
+    private lateinit var playlistAdapter: PlaylistAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -29,6 +37,38 @@ class PlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val imageView = binding.ivNoResult
         setThemeSpecificImage(imageView)
+
+        setupRecyclerView()
+        observeViewModel()
+
+        binding.buttonCreatePlaylist.setOnClickListener {
+            findNavController().navigate(R.id.action_fragmentMedia_to_FragmentCreatePlaylist)
+        }
+    }
+
+    private fun setupRecyclerView() {
+        playlistAdapter = PlaylistAdapter(emptyList())
+        binding.rvPlaylist.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvPlaylist.adapter = playlistAdapter
+    }
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.playlists.collectLatest { playlists ->
+                updateUI(playlists)
+            }
+        }
+    }
+
+    private fun updateUI(playlists: List<Playlist>) {
+        if (playlists.isEmpty()) {
+            binding.rvPlaylist.visibility = View.GONE
+            binding.ivNoResult.visibility = View.VISIBLE
+        } else {
+            binding.rvPlaylist.visibility = View.VISIBLE
+            binding.ivNoResult.visibility = View.GONE
+            playlistAdapter.updateData(playlists)
+        }
     }
 
     private fun setThemeSpecificImage(imageView: ImageView) {

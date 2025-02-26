@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.media
+package com.example.playlistmaker.presentation.media.favorite
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

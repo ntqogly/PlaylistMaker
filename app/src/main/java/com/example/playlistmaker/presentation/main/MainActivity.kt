@@ -28,13 +28,13 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView: BottomNavigationView = binding.bottomNav
         bottomNavigationView.setupWithNavController(navController)
 
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            when (destination.id) {
-//                R.id.playerFragment -> bottomNavigationView.visibility =
-//                    View.GONE
-//                else -> bottomNavigationView.visibility =
-//                    View.VISIBLE
-//            }
-//        }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.fragmentCreatePlaylist -> bottomNavigationView.visibility =
+                    View.GONE
+                else -> bottomNavigationView.visibility =
+                    View.VISIBLE
+            }
+        }
     }
 }

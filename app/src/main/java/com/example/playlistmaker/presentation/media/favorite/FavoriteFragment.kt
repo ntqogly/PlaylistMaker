@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.media
+package com.example.playlistmaker.presentation.media.favorite
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoriteBinding

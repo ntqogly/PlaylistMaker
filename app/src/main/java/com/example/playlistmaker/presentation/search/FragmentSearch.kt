@@ -7,7 +7,6 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -153,40 +152,6 @@ class FragmentSearch : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
     }
-
-//    private fun setupSearchTextWatcher() {
-//        val handler = Handler(requireContext().mainLooper)
-//        var searchRunnable: Runnable? = null
-//
-//        binding.etSearch.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-//
-//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                if (s.isNullOrEmpty()) {
-//                    loadSearchHistory()
-//                    binding.clearImageButton.visibility = View.INVISIBLE
-//                    binding.linearLayoutSearch.visibility = View.GONE
-//
-//                    searchRunnable?.let { handler.removeCallbacks(it) }
-//                } else {
-//                    binding.clearImageButton.visibility = View.VISIBLE
-//                    binding.linearLayoutHistory.visibility = View.GONE
-//
-//                    searchRunnable?.let { handler.removeCallbacks(it) }
-//                    searchRunnable = Runnable {
-//                        if (s.isNotEmpty()) {
-//                            viewModel.searchTracks(s.toString())
-//                        }
-//                    }
-//                    handler.postDelayed(searchRunnable!!, 2000)
-//
-//                }
-//
-//            }
-//
-//            override fun afterTextChanged(s: Editable?) {}
-//        })
-//    }
 
     private fun setupEditorActionListener() {
         binding.etSearch.setOnEditorActionListener { _, actionId, event ->

@@ -1,8 +1,9 @@
 package com.example.playlistmaker.presentation.media
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.playlistmaker.presentation.media.favorite.FavoriteFragment
+import com.example.playlistmaker.presentation.media.playlist.playlist.PlaylistFragment
 
 class MediaPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 

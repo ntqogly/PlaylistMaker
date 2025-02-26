@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".presentation.media.PlaylistFragment">
+    tools:context=".presentation.media.playlist.playlist.PlaylistFragment">
 
     <Button
+        android:id="@+id/button_create_playlist"
         style="@style/reload_button_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,5 +29,12 @@
         android:layout_height="wrap_content"
         android:text="@string/no_playlist"
         android:textAlignment="center" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_playlist"
+        android:layout_width="match_parent"
+        android:padding="16dp"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/playlist_item" />
 
 </LinearLayout>
