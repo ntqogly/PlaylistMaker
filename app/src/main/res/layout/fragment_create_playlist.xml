@@ -44,7 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:hint="@string/et_playlist_name"
+        app:boxStrokeColor="@color/selector_textinputlayout"
         app:cursorColor="@color/pb_blue"
+        app:hintTextColor="@color/selector_textinputlayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_place">
@@ -63,7 +65,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:hint="@string/playlist_description"
+        app:boxStrokeColor="@color/selector_textinputlayout"
         app:cursorColor="@color/pb_blue"
+        app:hintTextColor="@color/selector_textinputlayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_playlist_name">
