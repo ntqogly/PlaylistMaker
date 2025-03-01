@@ -21,4 +21,12 @@ class PlaylistInteractor(private val repository: PlaylistRepository) {
     suspend fun updatePlaylistTracks(playlistId: Long, trackIds: List<String>) {
         repository.updatePlaylistTracks(playlistId, trackIds)
     }
+
+    suspend fun isTrackInPlaylist(playlistId: Long, trackId: String): Boolean {
+        return repository.isTrackInPlaylist(playlistId, trackId)
+    }
+
+    suspend fun addTrackToPlaylist(playlistId: Long, trackId: String) {
+        repository.addTrackToPlaylist(playlistId, trackId)
+    }
 }

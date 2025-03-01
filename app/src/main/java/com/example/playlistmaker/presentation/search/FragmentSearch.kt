@@ -1,7 +1,6 @@
 package com.example.playlistmaker.presentation.search
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.os.Bundle
@@ -17,12 +16,12 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
-import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import kotlinx.coroutines.Job
@@ -90,13 +89,13 @@ class FragmentSearch : Fragment() {
     private fun setupRecyclerViews() {
         binding.rvTracks.layoutManager = LinearLayoutManager(requireContext())
         trackAdapter = TrackAdapter(mutableListOf()) { track ->
-            openPlayerActivity(track)
+            openPlayerFragment(track)
         }
         binding.rvTracks.adapter = trackAdapter
 
         binding.rvHistoryTracks.layoutManager = LinearLayoutManager(requireContext())
         historyAdapter = TrackAdapter(mutableListOf()) { track ->
-            openPlayerActivity(track)
+            openPlayerFragment(track)
         }
         binding.rvHistoryTracks.adapter = historyAdapter
     }
@@ -207,16 +206,12 @@ class FragmentSearch : Fragment() {
         }
     }
 
-    private fun openPlayerActivity(track: Track) {
+    private fun openPlayerFragment(track: Track) {
         searchHistoryUseCase.addTrackToHistory(track)
-        val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
-            putExtra("TRACK_EXTRA", Gson().toJson(track))
+        val bundle = Bundle().apply {
+            putString("TRACK_EXTRA", Gson().toJson(track))
         }
-        startActivity(intent)
-//        val bundle = Bundle().apply {
-//            putString("TRACK_EXTRA", Gson().toJson(track))
-//        }
-//        findNavController().navigate(R.id.action_fragmentSearch_to_playerFragment, bundle)
+        findNavController().navigate(R.id.action_fragmentSearch_to_playerFragment, bundle)
     }
 
     private fun showTrackList() {

@@ -2,13 +2,17 @@ package com.example.playlistmaker.presentation.media.playlist.newplaylist
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,7 +21,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -31,7 +37,7 @@ class CreatePlaylistFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel by viewModel<CreatePlaylistViewModel>()
-    private var isDataChanged = false
+    private var isImageChanged = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -50,18 +56,21 @@ class CreatePlaylistFragment : Fragment() {
 
         setupObservers()
         setupListeners()
+        binding.etPlaylistName.requestFocus()
+        showKeyboard(binding.etPlaylistName)
+
     }
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.playlistName.collectLatest {
-                binding.etPlaylistName.editText                                  // ПЕРЕПРОВЕРИТЬ
+                binding.etPlaylistName.editText
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.playlistDescription.collectLatest {
-                binding.etPlaylistDescription.editText                            // ПЕРЕПРОВЕРИТЬ
+                binding.etPlaylistDescription.editText
             }
         }
 
@@ -95,15 +104,15 @@ class CreatePlaylistFragment : Fragment() {
 
         binding.buttonCreateNewPlaylist.setOnClickListener {
             viewModel.createPlaylist()
-            Toast.makeText(
-                requireContext(), "Плейлист ${binding.playlistName.text} создан", Toast.LENGTH_SHORT
-            ).show()
+//            Toast.makeText(
+//                requireContext(), "Плейлист ${binding.playlistName.text} создан", Toast.LENGTH_SHORT
+//            ).show()
+            showSnackBar("Плейлист ${binding.playlistName.text} создан")
             findNavController().navigateUp()
         }
 
         binding.toolbar.setOnClickListener {
             showExitConfirmationDialog()
-//            findNavController().navigateUp()
         }
 
     }
@@ -113,13 +122,24 @@ class CreatePlaylistFragment : Fragment() {
         imagePickerLauncher.launch(intent)
     }
 
+    private fun showSnackBar(text: String) {
+        val snack = Snackbar.make(requireView(), text, 3000)
+        snack.view.setBackgroundResource(R.drawable.rounded_toast)
+        val textView =
+            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        textView.textSize = 16f
+        textView.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+        textView.gravity = Gravity.CENTER
+        snack.show()
+    }
+
     private val imagePickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data?.data != null) {
                 val imageUri = result.data!!.data!!
                 val savedImagePath = saveImageToInternalStorage(imageUri)
                 viewModel.updateCoverPath(savedImagePath)
-                isDataChanged = true
+                isImageChanged = true
             }
         }
 
@@ -137,7 +157,7 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun showExitConfirmationDialog() {
-        if (isDataChanged) {
+        if (binding.playlistName.text?.isEmpty() == false || binding.playlistDesc.text?.isEmpty() == false || isImageChanged) {
             AlertDialog.Builder(requireContext()).setTitle("Завершить создание плейлиста?")
                 .setMessage("Все несохраненные данные будут потеряны")
                 .setPositiveButton("Завершить") { _, _ ->
@@ -148,14 +168,17 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
+    private fun showKeyboard(view: View) {
+        view.post {
+            val inputMethodManager =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-    companion object {
-        private const val REQUEST_IMAGE_PICK = 1001
-    }
-
 
 }

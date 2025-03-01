@@ -24,6 +24,7 @@
         android:src="@drawable/img_search_light" />
 
     <TextView
+        android:id="@+id/tv_no_result"
         style="@style/error_tv_style_media"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

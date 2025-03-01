@@ -72,6 +72,8 @@ class PlaylistFragment : Fragment() {
         if (playlists.isEmpty()) {
             binding.rvPlaylist.visibility = View.GONE
             binding.ivNoResult.visibility = View.VISIBLE
+            binding.tvNoResult.visibility=View.GONE
+
         } else {
             binding.rvPlaylist.visibility = View.VISIBLE
             binding.ivNoResult.visibility = View.GONE

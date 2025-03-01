@@ -32,8 +32,8 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.fragmentCreatePlaylist -> bottomNavigationView.visibility =
                     View.GONE
-                else -> bottomNavigationView.visibility =
-                    View.VISIBLE
+
+                else -> bottomNavigationView.visibility = View.VISIBLE
             }
         }
     }

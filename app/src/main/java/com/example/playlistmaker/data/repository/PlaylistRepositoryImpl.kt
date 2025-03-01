@@ -54,4 +54,14 @@ class PlaylistRepositoryImpl(
         playlistDao.updatePlaylistTracks(playlistId, gson.toJson(trackIds), trackIds.size)
     }
 
+    override suspend fun isTrackInPlaylist(playlistId: Long, trackId: String): Boolean {
+        val existingTrackIdsJson = playlistDao.getTrackIdsForPlaylist(playlistId) ?: "[]"
+        val trackIdsList = gson.fromJson(existingTrackIdsJson, Array<String>::class.java).toList()
+        return trackIdsList.contains(trackId)
+    }
+
+    override suspend fun addTrackToPlaylist(playlistId: Long, trackId: String) {
+        playlistDao.addTrackToPlaylist(playlistId, trackId)
+    }
+
 }

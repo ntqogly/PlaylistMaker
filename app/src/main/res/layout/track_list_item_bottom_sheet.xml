@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="61dp">
+
+    <ImageView
+        android:id="@+id/bsh_playlist_cover"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@android:drawable/btn_star_big_on"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/bsh_playlist_name"
+        style="@style/track_name_style"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
+        android:text="wu"
+        app:layout_constraintStart_toEndOf="@+id/bsh_playlist_cover"
+        app:layout_constraintTop_toTopOf="@+id/bsh_playlist_cover" />
+
+    <TextView
+        android:id="@+id/bsh_tracks_count"
+        style="@style/track_count_bottom_sheet"
+        android:layout_width="wrap_content"
+        android:layout_height="13dp"
+        android:singleLine="true"
+        android:text="12"
+        app:layout_constraintStart_toStartOf="@+id/bsh_playlist_name"
+        app:layout_constraintTop_toBottomOf="@+id/bsh_playlist_name" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

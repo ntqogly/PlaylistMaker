@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,4 +24,18 @@ interface PlaylistDao {
 
     @Query("UPDATE playlists SET trackIds = :trackIds, trackCount = :trackCount WHERE id = :playlistId")
     suspend fun updatePlaylistTracks(playlistId: Long, trackIds: String, trackCount: Int)
+
+    @Query("SELECT trackIds FROM playlists WHERE id = :playlistId")
+    suspend fun getTrackIdsForPlaylist(playlistId: Long): String?
+
+    suspend fun addTrackToPlaylist(playlistId: Long, trackId: String) {
+        val existingTrackIdsJson = getTrackIdsForPlaylist(playlistId) ?: "[]"
+        val trackIdsList =
+            Gson().fromJson(existingTrackIdsJson, Array<String>::class.java).toMutableList()
+
+        if (!trackIdsList.contains(trackId)) {
+            trackIdsList.add(trackId)
+            updatePlaylistTracks(playlistId, Gson().toJson(trackIdsList), trackIdsList.size)
+        }
+    }
 }
