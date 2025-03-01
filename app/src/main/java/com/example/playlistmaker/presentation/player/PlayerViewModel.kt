@@ -39,7 +39,6 @@ class PlayerViewModel(
     val trackAdditionStatus: StateFlow<String?> = _trackAdditionStatus
 
     private var progressJob: Job? = null
-    private var currentTrack: Track? = null
 
     fun loadPlaylists() {
         viewModelScope.launch {
@@ -71,9 +70,9 @@ class PlayerViewModel(
                     previewUrl = track.previewUrl,
                     artworkUrl100 = track.artworkUrl100
                 )
-                playlistInteractor.addTrackToPlaylist(playlistId, trackEntity) // ✅ Добавляем в плейлист
+                playlistInteractor.addTrackToPlaylist(playlistId, trackEntity)
                 _trackAdditionStatus.value = "Добавлено в плейлист ${selectedPlaylist?.name ?: "Неизвестный плейлист"}"
-                delay(300) // ⏳ Небольшая задержка, чтобы БД успела обновиться
+                delay(300)
                 loadPlaylists()
             }
         }

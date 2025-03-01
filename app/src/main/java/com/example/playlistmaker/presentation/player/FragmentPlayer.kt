@@ -1,7 +1,6 @@
 package com.example.playlistmaker.presentation.player
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -82,7 +81,7 @@ class FragmentPlayer : Fragment() {
                     when (newState) {
                         BottomSheetBehavior.STATE_EXPANDED, BottomSheetBehavior.STATE_COLLAPSED -> {
                             binding.overlay.visibility = View.VISIBLE
-                            binding.overlay.alpha = 0.6f // ✅ Затемнение при открытии
+                            binding.overlay.alpha = 0.6f
                         }
 
                         BottomSheetBehavior.STATE_HIDDEN -> {
@@ -92,7 +91,7 @@ class FragmentPlayer : Fragment() {
                 }
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    binding.overlay.alpha = slideOffset // ✅ Плавное затемнение при движении
+                    binding.overlay.alpha = slideOffset
                 }
             })
         }

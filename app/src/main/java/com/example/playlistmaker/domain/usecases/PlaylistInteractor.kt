@@ -1,6 +1,5 @@
 package com.example.playlistmaker.domain.usecases
 
-import android.util.Log
 import com.example.playlistmaker.data.db.PlaylistTrackEntity
 import com.example.playlistmaker.domain.api.PlaylistRepository
 import com.example.playlistmaker.domain.models.Playlist
