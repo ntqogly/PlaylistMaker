@@ -14,4 +14,7 @@
     <color name="pb_blue">#3772E7</color>
     <color name="like_red_color">#F56B6C</color>
     <color name="like_back_color">#FFFFFF</color>
+
+    <color name="switch_thumb">#3772E7</color>
+    <color name="switch_track">#9FBBF3</color>
 </resources>
