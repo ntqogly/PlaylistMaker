@@ -1,5 +1,7 @@
 package com.example.playlistmaker.domain.usecases
 
+import android.util.Log
+import com.example.playlistmaker.data.db.PlaylistTrackEntity
 import com.example.playlistmaker.domain.api.PlaylistRepository
 import com.example.playlistmaker.domain.models.Playlist
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +28,8 @@ class PlaylistInteractor(private val repository: PlaylistRepository) {
         return repository.isTrackInPlaylist(playlistId, trackId)
     }
 
-    suspend fun addTrackToPlaylist(playlistId: Long, trackId: String) {
-        repository.addTrackToPlaylist(playlistId, trackId)
+    suspend fun addTrackToPlaylist(playlistId: Long, track: PlaylistTrackEntity) {
+        repository.addTrackToDatabase(track)
+        repository.addTrackToPlaylist(playlistId, track.trackId.toString())
     }
 }

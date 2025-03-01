@@ -30,18 +30,18 @@ class PlaylistViewModel(
         }
     }
 
-    fun addTrackToPlaylist(playlistId: Long, trackId: String, playlistName: String) {
-        viewModelScope.launch {
-            val isTrackAlreadyInPlaylist = playlistInteractor.isTrackInPlaylist(playlistId, trackId)
-
-            if (isTrackAlreadyInPlaylist) {
-                _trackAdditionStatus.value = "Трек уже добавлен в плейлист $playlistName"
-            } else {
-                playlistInteractor.addTrackToPlaylist(playlistId, trackId)
-                _trackAdditionStatus.value = "Добавлено в плейлист $playlistName"
-            }
-        }
-    }
+//    fun addTrackToPlaylist(playlistId: Long, trackId: String, playlistName: String) {
+//        viewModelScope.launch {
+//            val isTrackAlreadyInPlaylist = playlistInteractor.isTrackInPlaylist(playlistId, trackId)
+//
+//            if (isTrackAlreadyInPlaylist) {
+//                _trackAdditionStatus.value = "Трек уже добавлен в плейлист $playlistName"
+//            } else {
+//                playlistInteractor.addTrackToPlaylist(playlistId, trackId)
+//                _trackAdditionStatus.value = "Добавлено в плейлист $playlistName"
+//            }
+//        }
+//    }
 
     fun clearTrackAdditionStatus() {
         _trackAdditionStatus.value = null

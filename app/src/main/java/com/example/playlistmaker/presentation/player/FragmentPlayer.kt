@@ -1,6 +1,7 @@
 package com.example.playlistmaker.presentation.player
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,10 @@ class FragmentPlayer : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val trackJson = arguments?.getString("TRACK_EXTRA")
+        if (trackJson != null) {
+            track = Gson().fromJson(trackJson, Track::class.java)
+        } else {
+        }
         val track = Gson().fromJson(trackJson, Track::class.java)
         track?.let {
             displayTrackInfo(it)
@@ -77,19 +82,17 @@ class FragmentPlayer : Fragment() {
                     when (newState) {
                         BottomSheetBehavior.STATE_EXPANDED, BottomSheetBehavior.STATE_COLLAPSED -> {
                             binding.overlay.visibility = View.VISIBLE
-                            viewModel.loadPlaylists()
+                            binding.overlay.alpha = 0.6f // ✅ Затемнение при открытии
                         }
 
                         BottomSheetBehavior.STATE_HIDDEN -> {
                             binding.overlay.visibility = View.GONE
                         }
-
-                        else -> {}
                     }
                 }
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    binding.overlay.alpha = slideOffset
+                    binding.overlay.alpha = slideOffset // ✅ Плавное затемнение при движении
                 }
             })
         }
@@ -97,8 +100,8 @@ class FragmentPlayer : Fragment() {
 
     private fun setupRecyclerView() {
         playlistAdapter = PlaylistBottomSheetAdapter { playlistId ->
-            track?.let {
-                viewModel.addTrackToPlaylist(playlistId, it)
+            if (track != null) {
+                viewModel.addTrackToPlaylist(playlistId, track!!)
             }
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
@@ -115,8 +118,9 @@ class FragmentPlayer : Fragment() {
         }
     }
 
+
     private fun openPlaylistBottomSheet() {
-        viewModel.loadPlaylists()
+        viewModel.showBottomSheet()
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 

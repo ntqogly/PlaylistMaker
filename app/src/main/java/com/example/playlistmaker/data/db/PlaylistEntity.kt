@@ -9,7 +9,7 @@ data class PlaylistEntity(
     val id: Long = 0,
     val name: String,
     val description: String?,
-    val coverPath: String?,  // Путь к обложке
-    val trackIds: String = "[]",  // JSON-список идентификаторов треков
+    val coverPath: String?,
+    val trackIds: String = "[]",
     val trackCount: Int = 0
 ) {}

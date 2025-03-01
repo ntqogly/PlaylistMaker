@@ -1,9 +1,11 @@
 package com.example.playlistmaker.presentation.player
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.data.db.PlaylistTrackEntity
 import com.example.playlistmaker.domain.api.IFavoriteTrackInteractor
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.models.Playlist
@@ -43,33 +45,48 @@ class PlayerViewModel(
         viewModelScope.launch {
             playlistInteractor.getAllPlaylists().collect { playlists ->
                 _playlists.value = playlists
+                playlists.forEach { playlist ->
+                }
+
             }
         }
     }
 
     fun addTrackToPlaylist(playlistId: Long, track: Track) {
         viewModelScope.launch {
-            val isTrackAlreadyInPlaylist = playlistInteractor.isTrackInPlaylist(playlistId,
-                track.trackId.toString()
-            )
-
-            if (isTrackAlreadyInPlaylist) {
-                _trackAdditionStatus.value = "Трек уже добавлен в плейлист ${getPlaylistName(playlistId)}"
+            val selectedPlaylist = _playlists.value.find { it.id == playlistId }
+            if (selectedPlaylist?.trackIds?.contains(track.trackId.toString()) == true) {
+                _trackAdditionStatus.value = "Трек уже добавлен в плейлист ${selectedPlaylist.name}"
             } else {
-                playlistInteractor.addTrackToPlaylist(playlistId, track.trackId.toString())
-                _trackAdditionStatus.value = "Добавлено в плейлист ${getPlaylistName(playlistId)}"
+                val trackEntity = PlaylistTrackEntity(
+                    trackId = track.trackId.toLong(),
+                    playlistId = playlistId,
+                    trackName = track.trackName,
+                    artistName = track.artistName,
+                    trackAlbum = track.trackAlbum ?: "",
+                    releaseDate = track.releaseDate ?: "",
+                    genre = track.genre,
+                    trackCountry = track.trackCountry,
+                    trackTimeMillis = track.trackTimeMillis,
+                    previewUrl = track.previewUrl,
+                    artworkUrl100 = track.artworkUrl100
+                )
+                playlistInteractor.addTrackToPlaylist(playlistId, trackEntity) // ✅ Добавляем в плейлист
+                _trackAdditionStatus.value = "Добавлено в плейлист ${selectedPlaylist?.name ?: "Неизвестный плейлист"}"
+                delay(300) // ⏳ Небольшая задержка, чтобы БД успела обновиться
                 loadPlaylists()
             }
         }
     }
+
 
     private fun getPlaylistName(playlistId: Long): String {
         return _playlists.value.find { it.id == playlistId }?.name ?: "Неизвестный плейлист"
     }
 
     fun showBottomSheet() {
+        loadPlaylists()
         _isBottomSheetVisible.value = true
-        loadPlaylists() // Загружаем список плейлистов перед показом
     }
 
     fun hideBottomSheet() {

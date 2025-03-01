@@ -1,7 +1,10 @@
 package com.example.playlistmaker.data.repository
 
+import android.util.Log
 import com.example.playlistmaker.data.db.PlaylistDao
 import com.example.playlistmaker.data.db.PlaylistEntity
+import com.example.playlistmaker.data.db.PlaylistTrackDao
+import com.example.playlistmaker.data.db.PlaylistTrackEntity
 import com.example.playlistmaker.domain.api.PlaylistRepository
 import com.example.playlistmaker.domain.models.Playlist
 import com.google.gson.Gson
@@ -9,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class PlaylistRepositoryImpl(
-    private val playlistDao: PlaylistDao
+    private val playlistDao: PlaylistDao, private val playlistTrackDao: PlaylistTrackDao
 ) : PlaylistRepository {
     private val gson = Gson()
 
@@ -61,7 +64,21 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun addTrackToPlaylist(playlistId: Long, trackId: String) {
-        playlistDao.addTrackToPlaylist(playlistId, trackId)
+        val existingTrackIdsJson = playlistDao.getTrackIdsForPlaylist(playlistId) ?: "[]"
+        val trackIdsList =
+            gson.fromJson(existingTrackIdsJson, Array<String>::class.java).toMutableList()
+        if (!trackIdsList.contains(trackId)) {
+            trackIdsList.add(trackId)
+            playlistDao.updatePlaylistTracks(
+                playlistId, gson.toJson(trackIdsList), trackIdsList.size
+            )
+            val updatedTrackIdsJson = playlistDao.getTrackIdsForPlaylist(playlistId) ?: "[]"
+            val updatedTrackIds =
+                gson.fromJson(updatedTrackIdsJson, Array<String>::class.java).toList()
+        }
     }
 
+    override suspend fun addTrackToDatabase(track: PlaylistTrackEntity) {
+        playlistTrackDao.insertTrack(track)
+    }
 }
