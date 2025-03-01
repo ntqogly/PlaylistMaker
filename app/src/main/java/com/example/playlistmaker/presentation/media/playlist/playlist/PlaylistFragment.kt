@@ -72,14 +72,15 @@ class PlaylistFragment : Fragment() {
         if (playlists.isEmpty()) {
             binding.rvPlaylist.visibility = View.GONE
             binding.ivNoResult.visibility = View.VISIBLE
-            binding.tvNoResult.visibility=View.GONE
-
+            binding.tvNoResult.visibility = View.VISIBLE //
         } else {
             binding.rvPlaylist.visibility = View.VISIBLE
             binding.ivNoResult.visibility = View.GONE
+            binding.tvNoResult.visibility = View.GONE //
             playlistAdapter.updateData(playlists)
         }
     }
+
 
     private fun setThemeSpecificImage(imageView: ImageView) {
         val isNightMode =
