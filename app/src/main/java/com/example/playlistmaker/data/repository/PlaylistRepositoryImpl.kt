@@ -4,14 +4,18 @@ import com.example.playlistmaker.data.db.PlaylistDao
 import com.example.playlistmaker.data.db.PlaylistEntity
 import com.example.playlistmaker.data.db.PlaylistTrackDao
 import com.example.playlistmaker.data.db.PlaylistTrackEntity
+import com.example.playlistmaker.data.mapper.TrackMapper
 import com.example.playlistmaker.domain.api.PlaylistRepository
 import com.example.playlistmaker.domain.models.Playlist
+import com.example.playlistmaker.domain.models.PlaylistTrack
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class PlaylistRepositoryImpl(
-    private val playlistDao: PlaylistDao, private val playlistTrackDao: PlaylistTrackDao
+    private val playlistDao: PlaylistDao,
+    private val playlistTrackDao: PlaylistTrackDao,
+    private val trackMapper: TrackMapper
 ) : PlaylistRepository {
     private val gson = Gson()
 
@@ -71,8 +75,9 @@ class PlaylistRepositoryImpl(
         }
     }
 
-    override suspend fun addTrackToDatabase(track: PlaylistTrackEntity) {
-        playlistTrackDao.insertTrack(track)
+    override suspend fun addTrackToDatabase(track: PlaylistTrack) {
+        val trackEntity = trackMapper.mapToPlaylistEntity(track)
+        playlistTrackDao.insertTrack(trackEntity)
     }
 
     override suspend fun isTrackInPlaylistDB(trackId: Long, playlistId: Long): Boolean {

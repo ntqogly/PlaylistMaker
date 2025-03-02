@@ -1,7 +1,7 @@
 package com.example.playlistmaker.domain.api
 
-import com.example.playlistmaker.data.db.PlaylistTrackEntity
 import com.example.playlistmaker.domain.models.Playlist
+import com.example.playlistmaker.domain.models.PlaylistTrack
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistRepository {
@@ -10,7 +10,7 @@ interface PlaylistRepository {
     suspend fun deletePlaylist(playlist: Playlist)
     suspend fun updatePlaylistTracks(playlistId: Long, trackIds: List<String>)
     suspend fun addTrackToPlaylist(playlistId: Long, trackId: String)
-    suspend fun addTrackToDatabase(track: PlaylistTrackEntity)
+    suspend fun addTrackToDatabase(track: PlaylistTrack)
     suspend fun isTrackInPlaylistDB(trackId: Long, playlistId: Long): Boolean
 
 }

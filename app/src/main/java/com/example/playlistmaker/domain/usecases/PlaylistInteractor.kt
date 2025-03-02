@@ -3,6 +3,7 @@ package com.example.playlistmaker.domain.usecases
 import com.example.playlistmaker.data.db.PlaylistTrackEntity
 import com.example.playlistmaker.domain.api.PlaylistRepository
 import com.example.playlistmaker.domain.models.Playlist
+import com.example.playlistmaker.domain.models.PlaylistTrack
 import kotlinx.coroutines.flow.Flow
 
 class PlaylistInteractor(private val repository: PlaylistRepository) {
@@ -23,9 +24,9 @@ class PlaylistInteractor(private val repository: PlaylistRepository) {
         repository.updatePlaylistTracks(playlistId, trackIds)
     }
 
-    suspend fun addTrackToPlaylist(playlistId: Long, track: PlaylistTrackEntity) {
+    suspend fun addTrackToPlaylist(playlistId: Long, track: PlaylistTrack) {
         repository.addTrackToDatabase(track)
-        repository.addTrackToPlaylist(playlistId, track.trackId.toString())
+        repository.addTrackToPlaylist(playlistId, track.trackId)
     }
 
     suspend fun isTrackInPlaylistDB(trackId: Long, playlistId: Long): Boolean {

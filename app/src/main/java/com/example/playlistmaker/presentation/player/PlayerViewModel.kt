@@ -7,10 +7,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.db.PlaylistTrackEntity
 import com.example.playlistmaker.domain.api.IFavoriteTrackInteractor
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.models.Playlist
+import com.example.playlistmaker.domain.models.PlaylistTrack
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.usecases.PlaylistInteractor
 import kotlinx.coroutines.Job
@@ -67,8 +67,8 @@ class PlayerViewModel(
                     R.string.track_already_added_to_playlist, playlistName
                 )
             } else {
-                val trackEntity = PlaylistTrackEntity(
-                    trackId = track.trackId.toLong(),
+                val playlistTrack = PlaylistTrack(
+                    trackId = track.trackId.toString(),
                     playlistId = playlistId,
                     trackName = track.trackName,
                     artistName = track.artistName,
@@ -80,7 +80,7 @@ class PlayerViewModel(
                     previewUrl = track.previewUrl,
                     artworkUrl100 = track.artworkUrl100
                 )
-                playlistInteractor.addTrackToPlaylist(playlistId, trackEntity)
+                playlistInteractor.addTrackToPlaylist(playlistId, playlistTrack)
                 _trackAdditionStatus.value = getApplication<Application>().getString(
                     R.string.track_added_to_playlist_toast, playlistName
                 )

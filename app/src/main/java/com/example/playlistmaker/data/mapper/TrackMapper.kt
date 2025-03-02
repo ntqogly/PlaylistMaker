@@ -2,7 +2,9 @@ package com.example.playlistmaker.data.mapper
 
 import android.util.Log
 import com.example.playlistmaker.data.db.FavoriteTrackEntity
+import com.example.playlistmaker.data.db.PlaylistTrackEntity
 import com.example.playlistmaker.data.dto.TrackDTO
+import com.example.playlistmaker.domain.models.PlaylistTrack
 import com.example.playlistmaker.domain.models.Track
 
 class TrackMapper {
@@ -61,6 +63,39 @@ class TrackMapper {
             trackAlbum = track.trackAlbum,
             genre = track.genre,
             releaseDate = track.releaseDate,
+            previewUrl = track.previewUrl
+        )
+    }
+
+    fun mapFromPlaylistEntity(entity: PlaylistTrackEntity): PlaylistTrack {
+        return PlaylistTrack(
+            trackId = entity.trackId.toString(),
+            playlistId = entity.playlistId,
+            trackName = entity.trackName,
+            artistName = entity.artistName,
+            trackTimeMillis = entity.trackTimeMillis,
+            artworkUrl100 = entity.artworkUrl100,
+            trackCountry = entity.trackCountry,
+            trackAlbum = entity.trackAlbum,
+            genre = entity.genre,
+            releaseDate = entity.releaseDate,
+            previewUrl = entity.previewUrl
+        )
+    }
+
+    // ✅ Новый метод: конвертация PlaylistTrack → PlaylistTrackEntity
+    fun mapToPlaylistEntity(track: PlaylistTrack): PlaylistTrackEntity {
+        return PlaylistTrackEntity(
+            trackId = track.trackId.toLong(),
+            playlistId = track.playlistId,
+            trackName = track.trackName,
+            artistName = track.artistName,
+            trackTimeMillis = track.trackTimeMillis,
+            artworkUrl100 = track.artworkUrl100,
+            trackCountry = track.trackCountry,
+            trackAlbum = track.trackAlbum ?: "",
+            genre = track.genre,
+            releaseDate = track.releaseDate ?: "",
             previewUrl = track.previewUrl
         )
     }
