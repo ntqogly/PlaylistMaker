@@ -3,7 +3,6 @@ package com.example.playlistmaker.data.repository
 import com.example.playlistmaker.data.db.PlaylistDao
 import com.example.playlistmaker.data.db.PlaylistEntity
 import com.example.playlistmaker.data.db.PlaylistTrackDao
-import com.example.playlistmaker.data.db.PlaylistTrackEntity
 import com.example.playlistmaker.data.mapper.TrackMapper
 import com.example.playlistmaker.domain.api.PlaylistRepository
 import com.example.playlistmaker.domain.models.Playlist

@@ -43,7 +43,7 @@ class FavoriteFragment : Fragment() {
 
     private fun setupRecyclerViews() {
         favoriteTrackAdapter = FavoriteTrackAdapter(mutableListOf()) { track ->
-            openPlayerFrament(track)
+            openPlayerFragment(track)
         }
         binding.rvFavoriteTracks.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFavoriteTracks.adapter = favoriteTrackAdapter
@@ -74,7 +74,7 @@ class FavoriteFragment : Fragment() {
         favoriteTrackAdapter.updateTracks(tracks)
     }
 
-    private fun openPlayerFrament(track: Track) {
+    private fun openPlayerFragment(track: Track) {
         val bundle = Bundle().apply {
             putString("TRACK_EXTRA", Gson().toJson(track))
         }

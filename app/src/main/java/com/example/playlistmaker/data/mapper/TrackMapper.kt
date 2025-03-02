@@ -41,14 +41,13 @@ class TrackMapper {
             trackId = entity.trackId.toInt(),
             trackName = entity.trackName,
             artistName = entity.artistName,
-            trackTimeMillis = entity.trackTimeMillis,
-            artworkUrl100 = entity.artworkUrl100,
-            trackCountry = entity.trackCountry,
             trackAlbum = entity.trackAlbum,
-            genre = entity.genre,
             releaseDate = entity.releaseDate,
+            genre = entity.genre,
+            trackCountry = entity.trackCountry,
+            trackTimeMillis = entity.trackTimeMillis,
             previewUrl = entity.previewUrl,
-            isFavorite = true
+            artworkUrl100 = entity.artworkUrl100
         )
     }
 
@@ -57,13 +56,13 @@ class TrackMapper {
             trackId = track.trackId.toLong(),
             trackName = track.trackName,
             artistName = track.artistName,
-            trackTimeMillis = track.trackTimeMillis,
-            artworkUrl100 = track.artworkUrl100,
-            trackCountry = track.trackCountry,
             trackAlbum = track.trackAlbum,
-            genre = track.genre,
             releaseDate = track.releaseDate,
-            previewUrl = track.previewUrl
+            genre = track.genre,
+            trackCountry = track.trackCountry,
+            trackTimeMillis = track.trackTimeMillis,
+            previewUrl = track.previewUrl,
+            artworkUrl100 = track.artworkUrl100
         )
     }
 
@@ -83,7 +82,6 @@ class TrackMapper {
         )
     }
 
-    // ✅ Новый метод: конвертация PlaylistTrack → PlaylistTrackEntity
     fun mapToPlaylistEntity(track: PlaylistTrack): PlaylistTrackEntity {
         return PlaylistTrackEntity(
             trackId = track.trackId.toLong(),
@@ -99,5 +97,4 @@ class TrackMapper {
             previewUrl = track.previewUrl
         )
     }
-
 }
