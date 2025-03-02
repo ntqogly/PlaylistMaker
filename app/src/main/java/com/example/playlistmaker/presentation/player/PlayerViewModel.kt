@@ -57,10 +57,14 @@ class PlayerViewModel(
     @SuppressLint("StringFormatInvalid")
     fun addTrackToPlaylist(playlistId: Long, track: Track) {
         viewModelScope.launch {
+            val isTrackInDB =
+                playlistInteractor.isTrackInPlaylistDB(track.trackId.toLong(), playlistId)
             val selectedPlaylist = _playlists.value.find { it.id == playlistId }
-            if (selectedPlaylist?.trackIds?.contains(track.trackId.toString()) == true) {
+            val playlistName = selectedPlaylist?.name
+
+            if (isTrackInDB) {
                 _trackAdditionStatus.value = getApplication<Application>().getString(
-                    R.string.track_already_added_to_playlist, selectedPlaylist.name
+                    R.string.track_already_added_to_playlist, playlistName
                 )
             } else {
                 val trackEntity = PlaylistTrackEntity(
@@ -78,13 +82,14 @@ class PlayerViewModel(
                 )
                 playlistInteractor.addTrackToPlaylist(playlistId, trackEntity)
                 _trackAdditionStatus.value = getApplication<Application>().getString(
-                    R.string.track_added_yo_playlist_toast, selectedPlaylist?.name
+                    R.string.track_added_to_playlist_toast, playlistName
                 )
                 delay(300)
                 loadPlaylists()
             }
         }
     }
+
 
     fun showBottomSheet() {
         loadPlaylists()

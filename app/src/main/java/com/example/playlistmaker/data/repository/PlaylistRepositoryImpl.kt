@@ -1,6 +1,5 @@
 package com.example.playlistmaker.data.repository
 
-import android.util.Log
 import com.example.playlistmaker.data.db.PlaylistDao
 import com.example.playlistmaker.data.db.PlaylistEntity
 import com.example.playlistmaker.data.db.PlaylistTrackDao
@@ -57,12 +56,6 @@ class PlaylistRepositoryImpl(
         playlistDao.updatePlaylistTracks(playlistId, gson.toJson(trackIds), trackIds.size)
     }
 
-    override suspend fun isTrackInPlaylist(playlistId: Long, trackId: String): Boolean {
-        val existingTrackIdsJson = playlistDao.getTrackIdsForPlaylist(playlistId) ?: "[]"
-        val trackIdsList = gson.fromJson(existingTrackIdsJson, Array<String>::class.java).toList()
-        return trackIdsList.contains(trackId)
-    }
-
     override suspend fun addTrackToPlaylist(playlistId: Long, trackId: String) {
         val existingTrackIdsJson = playlistDao.getTrackIdsForPlaylist(playlistId) ?: "[]"
         val trackIdsList =
@@ -81,4 +74,10 @@ class PlaylistRepositoryImpl(
     override suspend fun addTrackToDatabase(track: PlaylistTrackEntity) {
         playlistTrackDao.insertTrack(track)
     }
+
+    override suspend fun isTrackInPlaylistDB(trackId: Long, playlistId: Long): Boolean {
+        val tracks = playlistTrackDao.getTracksForPlaylist(playlistId)
+        return tracks.any { it.trackId == trackId }
+    }
+
 }

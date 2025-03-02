@@ -9,8 +9,8 @@ interface PlaylistRepository {
     fun getAllPlaylists(): Flow<List<Playlist>>
     suspend fun deletePlaylist(playlist: Playlist)
     suspend fun updatePlaylistTracks(playlistId: Long, trackIds: List<String>)
-    suspend fun isTrackInPlaylist(playlistId: Long, trackId: String): Boolean
     suspend fun addTrackToPlaylist(playlistId: Long, trackId: String)
     suspend fun addTrackToDatabase(track: PlaylistTrackEntity)
+    suspend fun isTrackInPlaylistDB(trackId: Long, playlistId: Long): Boolean
 
 }
