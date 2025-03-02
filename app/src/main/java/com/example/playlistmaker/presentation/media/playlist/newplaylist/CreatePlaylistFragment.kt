@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
@@ -104,10 +103,7 @@ class CreatePlaylistFragment : Fragment() {
 
         binding.buttonCreateNewPlaylist.setOnClickListener {
             viewModel.createPlaylist()
-//            Toast.makeText(
-//                requireContext(), "Плейлист ${binding.playlistName.text} создан", Toast.LENGTH_SHORT
-//            ).show()
-            showSnackBar("Плейлист ${binding.playlistName.text} создан")
+            showSnackBar(getString(R.string.playlist_created, binding.playlistName.text))
             findNavController().navigateUp()
         }
 
@@ -158,11 +154,11 @@ class CreatePlaylistFragment : Fragment() {
 
     private fun showExitConfirmationDialog() {
         if (binding.playlistName.text?.isEmpty() == false || binding.playlistDesc.text?.isEmpty() == false || isImageChanged) {
-            AlertDialog.Builder(requireContext()).setTitle("Завершить создание плейлиста?")
-                .setMessage("Все несохраненные данные будут потеряны")
-                .setPositiveButton("Завершить") { _, _ ->
+            AlertDialog.Builder(requireContext()).setTitle(R.string.alert_dialog)
+                .setMessage(R.string.alert_dialog_set_message)
+                .setPositiveButton(R.string.alert_dialog_set_positive_button) { _, _ ->
                     findNavController().navigateUp()
-                }.setNegativeButton("Отмена", null).show()
+                }.setNegativeButton(R.string.negative_button, null).show()
         } else {
             findNavController().navigateUp()
         }

@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.domain.models.Playlist
@@ -55,7 +54,7 @@ class PlaylistFragment : Fragment() {
     private fun setupRecyclerView() {
         playlistAdapter = PlaylistAdapter(emptyList())
         val itemSpacing = resources.getDimensionPixelSize(R.dimen.platlist_item_space)
-        binding.rvPlaylist.addItemDecoration(GridSpacingItemDecoration(2,itemSpacing))
+        binding.rvPlaylist.addItemDecoration(GridSpacingItemDecoration(2, itemSpacing))
         binding.rvPlaylist.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvPlaylist.adapter = playlistAdapter
     }

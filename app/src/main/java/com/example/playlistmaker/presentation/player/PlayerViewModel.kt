@@ -1,10 +1,12 @@
 package com.example.playlistmaker.presentation.player
 
-import android.util.Log
+import android.annotation.SuppressLint
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.R
 import com.example.playlistmaker.data.db.PlaylistTrackEntity
 import com.example.playlistmaker.domain.api.IFavoriteTrackInteractor
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
@@ -20,8 +22,9 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val playbackInteractor: IPlaybackInteractor,
     private val favoriteTrackInteractor: IFavoriteTrackInteractor,
-    private val playlistInteractor: PlaylistInteractor
-) : ViewModel() {
+    private val playlistInteractor: PlaylistInteractor,
+    private val application: Application
+) : AndroidViewModel(application) {
 
     private val _state = MutableLiveData<PlayerState>()
     val state: LiveData<PlayerState> get() = _state
@@ -51,11 +54,14 @@ class PlayerViewModel(
         }
     }
 
+    @SuppressLint("StringFormatInvalid")
     fun addTrackToPlaylist(playlistId: Long, track: Track) {
         viewModelScope.launch {
             val selectedPlaylist = _playlists.value.find { it.id == playlistId }
             if (selectedPlaylist?.trackIds?.contains(track.trackId.toString()) == true) {
-                _trackAdditionStatus.value = "Трек уже добавлен в плейлист ${selectedPlaylist.name}"
+                _trackAdditionStatus.value = getApplication<Application>().getString(
+                    R.string.track_already_added_to_playlist, selectedPlaylist.name
+                )
             } else {
                 val trackEntity = PlaylistTrackEntity(
                     trackId = track.trackId.toLong(),
@@ -71,25 +77,18 @@ class PlayerViewModel(
                     artworkUrl100 = track.artworkUrl100
                 )
                 playlistInteractor.addTrackToPlaylist(playlistId, trackEntity)
-                _trackAdditionStatus.value = "Добавлено в плейлист ${selectedPlaylist?.name ?: "Неизвестный плейлист"}"
+                _trackAdditionStatus.value = getApplication<Application>().getString(
+                    R.string.track_added_yo_playlist_toast, selectedPlaylist?.name
+                )
                 delay(300)
                 loadPlaylists()
             }
         }
     }
 
-
-    private fun getPlaylistName(playlistId: Long): String {
-        return _playlists.value.find { it.id == playlistId }?.name ?: "Неизвестный плейлист"
-    }
-
     fun showBottomSheet() {
         loadPlaylists()
         _isBottomSheetVisible.value = true
-    }
-
-    fun hideBottomSheet() {
-        _isBottomSheetVisible.value = false
     }
 
     fun clearTrackAdditionStatus() {

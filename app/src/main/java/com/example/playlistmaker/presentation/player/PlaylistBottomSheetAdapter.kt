@@ -12,7 +12,10 @@ class PlaylistBottomSheetAdapter(
 
     private var playlists: List<Playlist> = emptyList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistBottomSheetViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): PlaylistBottomSheetViewHolder {
         val binding = TrackListItemBottomSheetBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )

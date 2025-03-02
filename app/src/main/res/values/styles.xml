@@ -226,4 +226,9 @@
         <item name="itemRippleColor">@color/pb_blue</item>
         <item name="itemTextColor">@color/bottom_navigation_light</item>
     </style>
+
+    <style name="RoundedImageView">
+        <item name="cornerSize">20dp</item>
+    </style>
+
 </resources>

@@ -1,5 +1,6 @@
 package com.example.playlistmaker.presentation.media.playlist.playlist
 
+import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.databinding.PlaylistItemBinding
@@ -9,6 +10,7 @@ class PlaylistViewHolder(
     private val binding: PlaylistItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
+    @SuppressLint("SetTextI18n")
     fun bind(playlist: Playlist) {
         binding.tvPlaylistName.text = playlist.name
         binding.tvPlaylistTrackCount.text = "${playlist.trackIds.size} треков"
