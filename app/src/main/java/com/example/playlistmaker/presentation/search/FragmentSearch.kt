@@ -63,27 +63,6 @@ class FragmentSearch : Fragment() {
         observeViewModel()
         setThemeSpecificImage(binding.ivNothingFound)
 
-        bottomNavHide()
-
-    }
-
-    private fun bottomNavHide() {
-        val bottomNavigationView =
-            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav)
-
-        val contentView = requireActivity().findViewById<FrameLayout>(android.R.id.content)
-        contentView.viewTreeObserver.addOnGlobalLayoutListener {
-            val r = Rect()
-            contentView.getWindowVisibleDisplayFrame(r)
-            val screenHeight = contentView.rootView.height
-            val keypadHeight = screenHeight - r.bottom
-
-            if (keypadHeight > screenHeight * 0.15) {
-                bottomNavigationView.visibility = View.GONE
-            } else {
-                bottomNavigationView.visibility = View.VISIBLE
-            }
-        }
     }
 
     private fun setupRecyclerViews() {
@@ -211,7 +190,7 @@ class FragmentSearch : Fragment() {
         val bundle = Bundle().apply {
             putString("TRACK_EXTRA", Gson().toJson(track))
         }
-        findNavController().navigate(R.id.action_fragmentSearch_to_playerFragment, bundle)
+        findNavController().navigate(R.id.action_fragmentSearch_to_fragmentPlayer, bundle)
     }
 
     private fun showTrackList() {

@@ -30,18 +30,14 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.fragmentPlayer) {
-                binding.bottomNav.visibility = View.GONE
-            } else {
-                binding.bottomNav.visibility = View.VISIBLE
-            }
-        }
+            when (destination.id) {
+                R.id.fragmentCreatePlaylist, R.id.fragmentPlayer -> {
+                    binding.bottomNav.isVisible = false
+                }
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.fragmentCreatePlaylist) {
-                binding.bottomNav.visibility = View.GONE
-            } else {
-                binding.bottomNav.visibility = View.VISIBLE
+                else -> {
+                    binding.bottomNav.isVisible = true
+                }
             }
         }
     }

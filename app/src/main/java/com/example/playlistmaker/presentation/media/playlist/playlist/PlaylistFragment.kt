@@ -42,7 +42,7 @@ class PlaylistFragment : Fragment() {
         observeViewModel()
 
         binding.buttonCreatePlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_fragmentMedia_to_FragmentCreatePlaylist)
+            findNavController().navigate(R.id.action_fragmentMedia_to_fragmentCreatePlaylist)
         }
     }
 
