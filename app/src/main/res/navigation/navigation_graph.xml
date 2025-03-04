@@ -52,6 +52,10 @@
         android:name="com.example.playlistmaker.presentation.media.favorite.FavoriteFragment"
         android:label="fragment_favorite"
         tools:layout="@layout/fragment_favorite" />
+    <fragment
+        android:id="@+id/fragmentSettings"
+        android:name="com.example.playlistmaker.presentation.settings.FragmentSettings"
+        android:label="FragmentSettings" />
 
 
 </navigation>
