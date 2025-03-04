@@ -20,6 +20,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.google.android.material.snackbar.Snackbar
@@ -76,7 +80,15 @@ class CreatePlaylistFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.coverPath.collectLatest { coverPath ->
                 coverPath?.let {
-                    Glide.with(requireContext()).load(it).into(binding.imagePlace)
+                    val radiusPx = (8 * resources.displayMetrics.density)
+                    Glide.with(requireContext())
+                        .load(coverPath)
+                        .apply(
+                            RequestOptions().transform(
+                            CenterCrop(),
+                            GranularRoundedCorners(radiusPx, radiusPx, radiusPx, radiusPx)
+                        ))
+                        .into(binding.imagePlace)
                 }
             }
         }
