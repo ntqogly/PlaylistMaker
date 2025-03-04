@@ -56,13 +56,27 @@ class CreatePlaylistFragment : Fragment() {
             showExitConfirmationDialog()
         }
 
-
         setupObservers()
         setupListeners()
         binding.etPlaylistName.requestFocus()
         showKeyboard(binding.etPlaylistName)
 
+
+        binding.etPlaylistName.editText?.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) scrollToView(binding.etPlaylistName)
+        }
+
+        binding.etPlaylistDescription.editText?.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) scrollToView(binding.etPlaylistDescription)
+        }
     }
+
+    private fun scrollToView(view: View) {
+        view.post {
+            binding.scrollView.smoothScrollTo(0, view.bottom)
+        }
+    }
+
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -81,14 +95,12 @@ class CreatePlaylistFragment : Fragment() {
             viewModel.coverPath.collectLatest { coverPath ->
                 coverPath?.let {
                     val radiusPx = (8 * resources.displayMetrics.density)
-                    Glide.with(requireContext())
-                        .load(coverPath)
-                        .apply(
-                            RequestOptions().transform(
+                    Glide.with(requireContext()).load(coverPath).apply(
+                        RequestOptions().transform(
                             CenterCrop(),
                             GranularRoundedCorners(radiusPx, radiusPx, radiusPx, radiusPx)
-                        ))
-                        .into(binding.imagePlace)
+                        )
+                    ).into(binding.imagePlace)
                 }
             }
         }
