@@ -1,6 +1,7 @@
 package com.example.playlistmaker.presentation.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -28,13 +29,16 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView: BottomNavigationView = binding.bottomNav
         bottomNavigationView.setupWithNavController(navController)
 
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            when (destination.id) {
-//                R.id.playerFragment -> bottomNavigationView.visibility =
-//                    View.GONE
-//                else -> bottomNavigationView.visibility =
-//                    View.VISIBLE
-//            }
-//        }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.fragmentCreatePlaylist, R.id.fragmentPlayer -> {
+                    binding.bottomNav.isVisible = false
+                }
+
+                else -> {
+                    binding.bottomNav.isVisible = true
+                }
+            }
+        }
     }
 }

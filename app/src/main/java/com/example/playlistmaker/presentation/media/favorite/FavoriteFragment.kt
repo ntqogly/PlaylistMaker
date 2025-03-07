@@ -1,6 +1,5 @@
-package com.example.playlistmaker.presentation.media
+package com.example.playlistmaker.presentation.media.favorite
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoriteBinding
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -45,7 +43,7 @@ class FavoriteFragment : Fragment() {
 
     private fun setupRecyclerViews() {
         favoriteTrackAdapter = FavoriteTrackAdapter(mutableListOf()) { track ->
-            openPlayerActivity(track)
+            openPlayerFragment(track)
         }
         binding.rvFavoriteTracks.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFavoriteTracks.adapter = favoriteTrackAdapter
@@ -76,15 +74,11 @@ class FavoriteFragment : Fragment() {
         favoriteTrackAdapter.updateTracks(tracks)
     }
 
-    private fun openPlayerActivity(track: Track) {
-//        val bundle = Bundle().apply {
-//            putString("TRACK_EXTRA", Gson().toJson(track))
-//        }
-//        findNavController().navigate(R.id.playerFragment, bundle)
-        val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
-            putExtra("TRACK_EXTRA", Gson().toJson(track))
+    private fun openPlayerFragment(track: Track) {
+        val bundle = Bundle().apply {
+            putString("TRACK_EXTRA", Gson().toJson(track))
         }
-        startActivity(intent)
+        findNavController().navigate(R.id.action_fragmentMedia_to_fragmentPlayer, bundle)
     }
 
     private fun setThemeSpecificImage(imageView: ImageView) {

@@ -1,13 +1,11 @@
 package com.example.playlistmaker.presentation.search
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -18,12 +16,12 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
-import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import kotlinx.coroutines.Job
@@ -65,39 +63,18 @@ class FragmentSearch : Fragment() {
         observeViewModel()
         setThemeSpecificImage(binding.ivNothingFound)
 
-        bottomNavHide()
-
-    }
-
-    private fun bottomNavHide() {
-        val bottomNavigationView =
-            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav)
-
-        val contentView = requireActivity().findViewById<FrameLayout>(android.R.id.content)
-        contentView.viewTreeObserver.addOnGlobalLayoutListener {
-            val r = Rect()
-            contentView.getWindowVisibleDisplayFrame(r)
-            val screenHeight = contentView.rootView.height
-            val keypadHeight = screenHeight - r.bottom
-
-            if (keypadHeight > screenHeight * 0.15) {
-                bottomNavigationView.visibility = View.GONE
-            } else {
-                bottomNavigationView.visibility = View.VISIBLE
-            }
-        }
     }
 
     private fun setupRecyclerViews() {
         binding.rvTracks.layoutManager = LinearLayoutManager(requireContext())
         trackAdapter = TrackAdapter(mutableListOf()) { track ->
-            openPlayerActivity(track)
+            openPlayerFragment(track)
         }
         binding.rvTracks.adapter = trackAdapter
 
         binding.rvHistoryTracks.layoutManager = LinearLayoutManager(requireContext())
         historyAdapter = TrackAdapter(mutableListOf()) { track ->
-            openPlayerActivity(track)
+            openPlayerFragment(track)
         }
         binding.rvHistoryTracks.adapter = historyAdapter
     }
@@ -154,40 +131,6 @@ class FragmentSearch : Fragment() {
         })
     }
 
-//    private fun setupSearchTextWatcher() {
-//        val handler = Handler(requireContext().mainLooper)
-//        var searchRunnable: Runnable? = null
-//
-//        binding.etSearch.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-//
-//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                if (s.isNullOrEmpty()) {
-//                    loadSearchHistory()
-//                    binding.clearImageButton.visibility = View.INVISIBLE
-//                    binding.linearLayoutSearch.visibility = View.GONE
-//
-//                    searchRunnable?.let { handler.removeCallbacks(it) }
-//                } else {
-//                    binding.clearImageButton.visibility = View.VISIBLE
-//                    binding.linearLayoutHistory.visibility = View.GONE
-//
-//                    searchRunnable?.let { handler.removeCallbacks(it) }
-//                    searchRunnable = Runnable {
-//                        if (s.isNotEmpty()) {
-//                            viewModel.searchTracks(s.toString())
-//                        }
-//                    }
-//                    handler.postDelayed(searchRunnable!!, 2000)
-//
-//                }
-//
-//            }
-//
-//            override fun afterTextChanged(s: Editable?) {}
-//        })
-//    }
-
     private fun setupEditorActionListener() {
         binding.etSearch.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || event?.keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -242,16 +185,12 @@ class FragmentSearch : Fragment() {
         }
     }
 
-    private fun openPlayerActivity(track: Track) {
+    private fun openPlayerFragment(track: Track) {
         searchHistoryUseCase.addTrackToHistory(track)
-        val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
-            putExtra("TRACK_EXTRA", Gson().toJson(track))
+        val bundle = Bundle().apply {
+            putString("TRACK_EXTRA", Gson().toJson(track))
         }
-        startActivity(intent)
-//        val bundle = Bundle().apply {
-//            putString("TRACK_EXTRA", Gson().toJson(track))
-//        }
-//        findNavController().navigate(R.id.action_fragmentSearch_to_playerFragment, bundle)
+        findNavController().navigate(R.id.action_fragmentSearch_to_fragmentPlayer, bundle)
     }
 
     private fun showTrackList() {

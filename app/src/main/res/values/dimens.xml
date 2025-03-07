@@ -13,4 +13,5 @@
     <dimen name="layout_settings_text_size">16sp</dimen>
     <dimen name="settings_layout_height">61dp</dimen>
     <dimen name="track_image_size">45dp</dimen>
+    <dimen name="platlist_item_space">8dp</dimen>
 </resources>

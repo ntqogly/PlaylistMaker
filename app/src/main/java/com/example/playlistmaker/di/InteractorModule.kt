@@ -5,8 +5,10 @@ import com.example.playlistmaker.domain.api.IFavoriteTrackInteractor
 import com.example.playlistmaker.domain.api.IPlaybackInteractor
 import com.example.playlistmaker.domain.api.ISearchTrackUseCase
 import com.example.playlistmaker.domain.api.ISupportInteractor
+import com.example.playlistmaker.domain.api.PlaylistRepository
 import com.example.playlistmaker.domain.usecases.FavoriteTrackInteractor
 import com.example.playlistmaker.domain.usecases.PlaybackInteractor
+import com.example.playlistmaker.domain.usecases.PlaylistInteractor
 import com.example.playlistmaker.domain.usecases.SearchHistoryUseCase
 import com.example.playlistmaker.domain.usecases.SearchTrackUseCase
 import com.example.playlistmaker.domain.usecases.SupportInteractor
@@ -20,6 +22,6 @@ val interactorModule = module {
     single<ISupportInteractor> { SupportInteractor(get()) }
     single { SearchHistoryUseCase(get()) }
     single { ThemeInteractor(get()) }
-
     single<IFavoriteTrackInteractor> { FavoriteTrackInteractor(get()) }
+    single { PlaylistInteractor(get()) }
 }

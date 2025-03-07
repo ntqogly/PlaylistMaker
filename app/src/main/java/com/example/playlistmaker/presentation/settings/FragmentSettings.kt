@@ -75,8 +75,4 @@ class FragmentSettings : Fragment() {
         startActivity(android.content.Intent.createChooser(shareIntent, null))
     }
 
-
-    companion object {
-
-    }
 }

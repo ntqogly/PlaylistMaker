@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#1A1B22</color>
+    <color name="overlay">#FFFFFFFF</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="bottom_sheet">#1A1B22</color>
     <color name="mainLayout_background">#3772E7</color>
     <color name="blue">#9FBBF3</color>
     <color name="grey">#E6E8EB</color>
@@ -12,4 +14,7 @@
     <color name="pb_blue">#3772E7</color>
     <color name="like_red_color">#F56B6C</color>
     <color name="like_back_color">#FFFFFF</color>
+
+    <color name="switch_thumb">#3772E7</color>
+    <color name="switch_track">#9FBBF3</color>
 </resources>

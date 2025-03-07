@@ -26,10 +26,24 @@
     <string name="track_genre">Жанр</string>
     <string name="track_country">Страна</string>
     <string name="_00_00">00:00</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_playlist">Вы не создали ни одного плейлиста</string>
     <string name="new_playlist">Новый плейлист</string>
     <string name="empty_media">Ваша медиатека пуста</string>
     <string name="media">Медиатека</string>
+    <string name="playlist_name">Workout</string>
+    <string name="_24">24 трека</string>
+    <string name="et_playlist_name">Название*</string>
+    <string name="playlist_description">Описание</string>
+    <string name="create_playlist">Создать</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="alert_dialog">Завершить создание плейлиста?</string>
+    <string name="alert_dialog_set_message">Все несохраненные данные будут потеряны</string>
+    <string name="alert_dialog_set_positive_button">Завершить</string>
+    <string name="negative_button">Отмена</string>
+    <string name="track_already_added_to_playlist">Трек уже добавлен в плейлист %s</string>
+    <string name="track_added_to_playlist_toast">Добавлено в плейлист %s</string>
+    <string name="playlist_created">Плейлист %s создан</string>
+
 </resources>

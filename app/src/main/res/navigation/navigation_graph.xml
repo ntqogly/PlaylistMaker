@@ -8,28 +8,54 @@
     <fragment
         android:id="@+id/fragmentSearch"
         android:name="com.example.playlistmaker.presentation.search.FragmentSearch"
-        android:label="fragment_single_main"
+        android:label="fragment_search"
         tools:layout="@layout/fragment_search">
         <action
-            android:id="@+id/action_fragmentSearch_to_playerFragment"
-            app:destination="@id/playerFragment" />
+            android:id="@+id/action_fragmentSearch_to_fragmentPlayer"
+            app:destination="@id/fragmentPlayer" />
     </fragment>
     <fragment
         android:id="@+id/fragmentMedia"
         android:name="com.example.playlistmaker.presentation.media.FragmentMedia"
         android:label="fragment_single_media"
-        tools:layout="@layout/fragment_media" />
+        tools:layout="@layout/fragment_media" >
+        <action
+            android:id="@+id/action_fragmentMedia_to_fragmentPlayer"
+            app:destination="@id/fragmentPlayer" />
+        <action
+            android:id="@+id/action_fragmentMedia_to_fragmentCreatePlaylist"
+            app:destination="@id/fragmentCreatePlaylist" />
+    </fragment>
     <fragment
-        android:id="@+id/fragmentSettings"
-        android:name="com.example.playlistmaker.presentation.settings.FragmentSettings"
-        android:label="fragment_single_settings"
-        tools:layout="@layout/fragment_settings" />
-    <fragment
-        android:id="@+id/playerFragment"
+        android:id="@+id/fragmentPlayer"
         android:name="com.example.playlistmaker.presentation.player.FragmentPlayer"
         android:label="fragment_player"
         tools:layout="@layout/fragment_player">
-
+        <action
+            android:id="@+id/action_fragmentPlayer_to_fragmentCreatePlaylist"
+            app:destination="@id/fragmentCreatePlaylist" />
     </fragment>
+
+    <fragment
+        android:id="@+id/fragmentCreatePlaylist"
+        android:name="com.example.playlistmaker.presentation.media.playlist.newplaylist.CreatePlaylistFragment"
+        android:label="fragment_create_playlist"
+        tools:layout="@layout/fragment_create_playlist"/>
+
+    <fragment
+        android:id="@+id/fragmentPlaylist"
+        android:name="com.example.playlistmaker.presentation.media.playlist.playlist.PlaylistFragment"
+        android:label="fragment_playlist"
+        tools:layout="@layout/fragment_playlist"/>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.playlistmaker.presentation.media.favorite.FavoriteFragment"
+        android:label="fragment_favorite"
+        tools:layout="@layout/fragment_favorite" />
+    <fragment
+        android:id="@+id/fragmentSettings"
+        android:name="com.example.playlistmaker.presentation.settings.FragmentSettings"
+        android:label="FragmentSettings" />
+
 
 </navigation>
