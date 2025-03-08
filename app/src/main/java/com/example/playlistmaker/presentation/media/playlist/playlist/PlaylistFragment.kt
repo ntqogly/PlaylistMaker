@@ -52,11 +52,20 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        playlistAdapter = PlaylistAdapter(emptyList())
+        playlistAdapter = PlaylistAdapter(emptyList()) { playlistId ->
+            navigateToPlaylistDetails(playlistId)
+        }
         val itemSpacing = resources.getDimensionPixelSize(R.dimen.platlist_item_space)
         binding.rvPlaylist.addItemDecoration(GridSpacingItemDecoration(2, itemSpacing))
         binding.rvPlaylist.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvPlaylist.adapter = playlistAdapter
+    }
+
+    private fun navigateToPlaylistDetails(playlistId: Long) {
+        val bundle = Bundle().apply {
+            putLong("playlistId", playlistId)
+        }
+        findNavController().navigate(R.id.action_fragmentMedia_to_playlistDetailsFragment, bundle)
     }
 
     private fun observeViewModel() {

@@ -7,7 +7,7 @@ import com.example.playlistmaker.databinding.PlaylistItemBinding
 import com.example.playlistmaker.domain.models.Playlist
 
 class PlaylistViewHolder(
-    private val binding: PlaylistItemBinding
+    private val binding: PlaylistItemBinding, private val onPlaylistClick: (Long) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     @SuppressLint("SetTextI18n")
@@ -17,6 +17,10 @@ class PlaylistViewHolder(
 
         if (!playlist.coverPath.isNullOrEmpty()) {
             Glide.with(binding.root.context).load(playlist.coverPath).into(binding.ivPlaylist)
+        }
+
+        binding.root.setOnClickListener {
+            onPlaylistClick(playlist.id)
         }
     }
 }

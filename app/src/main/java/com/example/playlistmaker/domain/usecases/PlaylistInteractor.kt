@@ -1,6 +1,5 @@
 package com.example.playlistmaker.domain.usecases
 
-import com.example.playlistmaker.data.db.PlaylistTrackEntity
 import com.example.playlistmaker.domain.api.PlaylistRepository
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.PlaylistTrack
@@ -31,5 +30,13 @@ class PlaylistInteractor(private val repository: PlaylistRepository) {
 
     suspend fun isTrackInPlaylistDB(trackId: Long, playlistId: Long): Boolean {
         return repository.isTrackInPlaylistDB(trackId, playlistId)
+    }
+
+    fun getPlaylistById(playlistId: Long): Flow<Playlist> {
+        return repository.getPlaylistById(playlistId)
+    }
+
+    fun getTracksForPlaylist(playlistId: Long): Flow<List<PlaylistTrack>> {
+        return repository.getTracksForPlaylist(playlistId)
     }
 }

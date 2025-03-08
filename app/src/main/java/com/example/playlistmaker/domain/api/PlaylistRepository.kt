@@ -12,5 +12,6 @@ interface PlaylistRepository {
     suspend fun addTrackToPlaylist(playlistId: Long, trackId: String)
     suspend fun addTrackToDatabase(track: PlaylistTrack)
     suspend fun isTrackInPlaylistDB(trackId: Long, playlistId: Long): Boolean
-
+    fun getPlaylistById(playlistId: Long): Flow<Playlist>
+    fun getTracksForPlaylist(playlistId: Long): Flow<List<PlaylistTrack>>
 }

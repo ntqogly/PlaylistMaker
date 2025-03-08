@@ -46,4 +46,6 @@
     <string name="track_added_to_playlist_toast">Добавлено в плейлист %s</string>
     <string name="playlist_created">Плейлист %s создан</string>
 
+    <string name="track_count_placeholder">%d треков</string>
+
 </resources>

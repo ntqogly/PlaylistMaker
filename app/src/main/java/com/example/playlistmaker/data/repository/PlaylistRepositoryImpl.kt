@@ -9,6 +9,8 @@ import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.PlaylistTrack
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class PlaylistRepositoryImpl(
@@ -83,5 +85,34 @@ class PlaylistRepositoryImpl(
         val tracks = playlistTrackDao.getTracksForPlaylist(playlistId)
         return tracks.any { it.trackId == trackId }
     }
+
+    override fun getPlaylistById(playlistId: Long): Flow<Playlist> {
+        return playlistDao.observePlaylistById(playlistId).map { entity ->
+            Playlist(
+                id = entity.id,
+                name = entity.name,
+                description = entity.description,
+                coverPath = entity.coverPath,
+                trackIds = gson.fromJson(entity.trackIds, Array<String>::class.java).toList()
+            )
+        }
+    }
+
+    override fun getTracksForPlaylist(playlistId: Long): Flow<List<PlaylistTrack>> {
+        return playlistDao.observePlaylistById(playlistId).flatMapLatest { playlistEntity ->
+            val trackIds =
+                gson.fromJson(playlistEntity.trackIds, Array<String>::class.java).toList()
+
+            if (trackIds.isEmpty()) {
+                return@flatMapLatest flowOf(emptyList())
+            }
+
+            playlistTrackDao.getTracksByIds(trackIds).map { entities ->
+                val mappedTracks = entities.map { trackMapper.mapFromPlaylistEntity(it) }
+                mappedTracks
+            }
+        }
+    }
+
 
 }
