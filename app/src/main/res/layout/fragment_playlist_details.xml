@@ -47,7 +47,7 @@
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/details_image_place"
-            tools:text="Best songs 2021" />
+            tools:text="Wu" />
 
         <TextView
             android:id="@+id/details_desc"
@@ -60,7 +60,7 @@
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@+id/details_playlist_name"
             app:layout_constraintTop_toBottomOf="@+id/details_playlist_name"
-            tools:text="description of album" />
+            tools:text="wu description" />
 
         <TextView
             android:id="@+id/playlist_total_duration"
@@ -131,6 +131,7 @@
         android:background="@drawable/rounded_bottom_sheet"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:visibility="visible"
         app:behavior_hideable="false"
         app:behavior_peekHeight="200dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -152,5 +153,93 @@
             tools:visiblity="invisible" />
     </LinearLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bsh_menu"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@drawable/rounded_bottom_sheet"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/overlay"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/bsh_menu_image_place"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="13dp"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="32dp"
+            android:src="@drawable/ic_place_holder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/bsh_menu_playlist_name"
+            style="@style/track_name_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            app:layout_constraintStart_toEndOf="@id/bsh_menu_image_place"
+            app:layout_constraintTop_toTopOf="@id/bsh_menu_image_place"
+            tools:text="Wu" />
+
+        <TextView
+            android:id="@+id/bsh_menu_playlist_tracks_count"
+            style="@style/track_count_bottom_sheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="1dp"
+            android:text="34 tracks"
+            android:textColor="@color/grey_text"
+            app:layout_constraintStart_toEndOf="@+id/bsh_menu_image_place"
+            app:layout_constraintTop_toBottomOf="@id/bsh_menu_playlist_name" />
+
+        <TextView
+            android:id="@+id/bsh_menu_playlist_share"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:text="Поделиться"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bsh_menu_image_place"
+            tools:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/bsh_menu_playlist_edit"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:text="Редактировать информацию"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bsh_menu_playlist_share"
+            tools:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/bsh_menu_playlist_delete"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:text="Удалить плейлист"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bsh_menu_playlist_edit"
+            tools:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

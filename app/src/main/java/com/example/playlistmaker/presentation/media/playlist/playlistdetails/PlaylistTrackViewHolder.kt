@@ -2,6 +2,7 @@ package com.example.playlistmaker.presentation.media.playlist.playlistdetails
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackListItemBinding
 import com.example.playlistmaker.domain.models.PlaylistTrack
@@ -17,8 +18,9 @@ class PlaylistTrackViewHolder(
         binding.artistName.text = track.artistName
 
         Glide.with(binding.root.context).load(track.artworkUrl100)
-            .placeholder(R.drawable.ic_place_holder).error(R.drawable.ic_place_holder)
-            .into(binding.trackImage)
+            .placeholder(R.drawable.ic_place_holder).error(R.drawable.ic_place_holder).transform(
+                RoundedCorners(10)
+            ).into(binding.trackImage)
 
         binding.root.setOnClickListener { onTrackClick(track) }
 

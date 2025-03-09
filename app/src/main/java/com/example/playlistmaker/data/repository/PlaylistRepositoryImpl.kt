@@ -1,6 +1,5 @@
 package com.example.playlistmaker.data.repository
 
-import android.util.Log
 import com.example.playlistmaker.data.db.PlaylistDao
 import com.example.playlistmaker.data.db.PlaylistEntity
 import com.example.playlistmaker.data.db.PlaylistTrackDao
@@ -44,18 +43,6 @@ class PlaylistRepositoryImpl(
                 )
             }
         }
-    }
-
-    override suspend fun deletePlaylist(playlist: Playlist) {
-        val entity = PlaylistEntity(
-            id = playlist.id,
-            name = playlist.name,
-            description = playlist.description,
-            coverPath = playlist.coverPath,
-            trackIds = gson.toJson(playlist.trackIds),
-            trackCount = playlist.trackIds.size
-        )
-        playlistDao.deletePlaylist(entity)
     }
 
     override suspend fun updatePlaylistTracks(playlistId: Long, trackIds: List<String>) {
@@ -128,6 +115,15 @@ class PlaylistRepositoryImpl(
         val usageCount = playlistTrackDao.getTrackUsageCount(trackId)
         if (usageCount == 0) {
             playlistTrackDao.deleteTrackIfUnused(trackId)
+        }
+    }
+
+    override suspend fun deletePlaylist(playlistId: Long) {
+        val playlist = playlistDao.getPlaylistById(playlistId) ?: return
+        val trackIds = gson.fromJson(playlist.trackIds, Array<String>::class.java).toList()
+        playlistDao.deletePlaylistById(playlistId)
+        trackIds.forEach { trackId ->
+            removeTrackIfUnused(trackId.toLong())
         }
     }
 

@@ -1,15 +1,20 @@
 package com.example.playlistmaker.presentation.media.playlist.playlistdetails
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistDetailsBinding
 import com.example.playlistmaker.domain.models.Playlist
@@ -28,6 +33,7 @@ class PlaylistDetailsFragment : Fragment() {
     private val viewModel by viewModel<PlaylistDetailsViewModel>()
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var menuBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var trackAdapter: PlaylistTrackAdapter
 
     override fun onCreateView(
@@ -51,6 +57,8 @@ class PlaylistDetailsFragment : Fragment() {
         viewModel.loadTracks(playlistId)
 
         observeViewModel(playlistId)
+
+        onClickListeners(playlistId)
 
 
     }
@@ -84,6 +92,12 @@ class PlaylistDetailsFragment : Fragment() {
             state = BottomSheetBehavior.STATE_COLLAPSED
             isHideable = false
         }
+
+        menuBottomSheetBehavior = BottomSheetBehavior.from(binding.bshMenu).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+            isHideable = true
+        }
+
     }
 
     private fun setupRecyclerView() {
@@ -131,6 +145,121 @@ class PlaylistDetailsFragment : Fragment() {
             lastDigit == 1 -> "$count трек"
             lastDigit in 2..4 -> "$count трека"
             else -> "$count треков"
+        }
+    }
+
+    private fun onClickListeners(playlistId: Long) {
+        binding.detailsToolbar.setNavigationOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
+        binding.detailsShare.setOnClickListener {
+            sharePlaylist(playlistId)
+        }
+
+        binding.detailsThreeDot.setOnClickListener {
+            attachDataToMenu()
+            binding.bshMenu.visibility = View.VISIBLE
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        binding.bshMenuPlaylistShare.setOnClickListener {
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            sharePlaylist(playlistId)
+        }
+
+        binding.bshMenuPlaylistDelete.setOnClickListener {
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            showDeletePlaylistDialog(playlistId)
+        }
+    }
+
+    private fun attachDataToMenu() {
+        val playlistId = arguments?.getLong("playlistId") ?: return
+
+        lifecycleScope.launch {
+            viewModel.getPlaylistDetails(playlistId).collectLatest { playlist ->
+                binding.bshMenuPlaylistName.text = playlist.name
+                binding.bshMenuPlaylistTracksCount.text = formatTracksCount(playlist.trackIds.size)
+
+                Glide.with(requireContext()).load(playlist.coverPath ?: R.drawable.ic_place_holder)
+                    .transform(
+                        RoundedCorners(10)
+                    ).placeholder(R.drawable.ic_place_holder).error(R.drawable.ic_place_holder)
+                    .into(binding.bshMenuImagePlace)
+            }
+        }
+    }
+
+    private fun sharePlaylist(playlistId: Long) {
+        lifecycleScope.launch {
+            viewModel.getPlaylistDetails(playlistId).collectLatest { playlist ->
+                val tracks = viewModel.tracks.value
+                if (tracks.isEmpty()) {
+                    Toast.makeText(
+                        requireContext(),
+                        "В этом плейлисте нет списка треков, которым можно поделиться",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@collectLatest
+                }
+
+                val shareText = buildShareText(playlist, tracks)
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, shareText)
+                }
+                startActivity(Intent.createChooser(intent, "Поделиться плейлистом"))
+            }
+        }
+    }
+
+    private fun buildShareText(playlist: Playlist, tracks: List<PlaylistTrack>): String {
+        val trackListText = tracks.mapIndexed { index, track ->
+            "${index + 1}. ${track.artistName} - ${track.trackName} (${formatDuration(track.trackTimeMillis)})"
+        }.joinToString("\n")
+
+        return """
+            ${playlist.name}
+            ${playlist.description}
+            ${formatTracksCount(tracks.size)}
+            
+            $trackListText
+        """.trimIndent()
+    }
+
+    private fun formatDuration(durationMillis: Int): String {
+        val minutes = (durationMillis / 60000)
+        val seconds = ((durationMillis % 60000) / 1000)
+        return "$minutes:${seconds.toString().padStart(2, '0')}"
+    }
+
+    private fun showDeletePlaylistDialog(playlistId: Long) {
+        lifecycleScope.launch {
+            viewModel.getPlaylistDetails(playlistId).collectLatest { playlist ->
+                val dialog = AlertDialog.Builder(requireContext())
+                    .setMessage("Хотите удалить плейлист «${playlist.name}»?")
+                    .setPositiveButton("Да") { _, _ ->
+                        lifecycleScope.launch {
+                            viewModel.deletePlaylist(playlistId) {
+                                findNavController().popBackStack()
+                            }
+                        }
+                    }
+                    .setNegativeButton("Нет", null)
+                    .create()
+
+                dialog.setOnShowListener {
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
+                        requireContext().getColor(R.color.pb_blue)
+                    )
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
+                        requireContext().getColor(R.color.pb_blue)
+                    )
+                }
+
+                dialog.show()
+            }
         }
     }
 

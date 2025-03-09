@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.media.playlist.playlistdetails
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.models.Playlist
@@ -61,5 +60,10 @@ class PlaylistDetailsViewModel(private val playlistInteractor: PlaylistInteracto
         }
     }
 
-
+    fun deletePlaylist(playlistId: Long, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            playlistInteractor.deletePlaylist(playlistId)
+            onSuccess()
+        }
+    }
 }
