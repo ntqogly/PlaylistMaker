@@ -2,6 +2,7 @@ package com.example.playlistmaker.presentation.media.playlist.playlist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.PlaylistItemBinding
 import com.example.playlistmaker.domain.models.Playlist
@@ -9,7 +10,7 @@ import com.example.playlistmaker.domain.models.Playlist
 class PlaylistAdapter(
     private var playlists: List<Playlist>,
     private val onPlaylistClick: (Long) -> Unit
-) : RecyclerView.Adapter<PlaylistViewHolder>() {
+) : ListAdapter<Playlist, PlaylistViewHolder>(PlaylistDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         val binding =

@@ -3,6 +3,7 @@ package com.example.playlistmaker.presentation.media.favorite
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
@@ -14,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class FavoriteTrackAdapter(
     private var tracks: MutableList<Track>, private val onTrackClick: (Track) -> Unit
-) : RecyclerView.Adapter<FavoriteTrackViewHolder>() {
+) : ListAdapter<Track, FavoriteTrackViewHolder>(FavoriteTrackDiffCallback()) {
 
     private var clickJob: Job? = null
 
