@@ -63,7 +63,11 @@
         android:id="@+id/playlistDetailsFragment"
         android:name="com.example.playlistmaker.presentation.media.playlist.playlistdetails.PlaylistDetailsFragment"
         android:label="fragment_playlist_details"
-        tools:layout="@layout/fragment_playlist_details" />
+        tools:layout="@layout/fragment_playlist_details" >
+        <action
+            android:id="@+id/action_playlistDetailsFragment_to_fragmentPlayer"
+            app:destination="@id/fragmentPlayer" />
+    </fragment>
 
 
 </navigation>

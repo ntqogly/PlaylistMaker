@@ -122,8 +122,35 @@
             app:layout_constraintStart_toEndOf="@+id/details_share"
             app:layout_constraintTop_toTopOf="@+id/details_share"
             app:tint="@color/black" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_bottom_sheet"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="350dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/overlay" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_playlist_tracks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/track_list_item"
+            tools:visiblity="invisible" />
+    </LinearLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

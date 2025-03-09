@@ -20,4 +20,12 @@ interface PlaylistTrackDao {
     @Query("SELECT * FROM playlist_tracks WHERE trackId IN (:trackIds)")
     fun getTracksByIds(trackIds: List<String>): Flow<List<PlaylistTrackEntity>>
 
+    @Query("DELETE FROM playlist_tracks WHERE trackId = :trackId AND playlist_id = :playlistId")
+    suspend fun deleteTrackFromPlaylist(trackId: Long, playlistId: Long)
+
+    @Query("SELECT COUNT(*) FROM playlist_tracks WHERE trackId = :trackId")
+    suspend fun getTrackUsageCount(trackId: Long): Int
+
+    @Query("DELETE FROM playlist_tracks WHERE trackId = :trackId")
+    suspend fun deleteTrackIfUnused(trackId: Long)
 }

@@ -39,4 +39,8 @@ class PlaylistInteractor(private val repository: PlaylistRepository) {
     fun getTracksForPlaylist(playlistId: Long): Flow<List<PlaylistTrack>> {
         return repository.getTracksForPlaylist(playlistId)
     }
+
+    suspend fun deleteTrackFromPlaylist(trackId: Long, playlistId: Long) {
+        repository.deleteTrackFromPlaylist(trackId, playlistId)
+    }
 }

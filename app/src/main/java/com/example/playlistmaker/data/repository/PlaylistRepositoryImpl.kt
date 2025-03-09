@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data.repository
 
+import android.util.Log
 import com.example.playlistmaker.data.db.PlaylistDao
 import com.example.playlistmaker.data.db.PlaylistEntity
 import com.example.playlistmaker.data.db.PlaylistTrackDao
@@ -102,11 +103,9 @@ class PlaylistRepositoryImpl(
         return playlistDao.observePlaylistById(playlistId).flatMapLatest { playlistEntity ->
             val trackIds =
                 gson.fromJson(playlistEntity.trackIds, Array<String>::class.java).toList()
-
             if (trackIds.isEmpty()) {
                 return@flatMapLatest flowOf(emptyList())
             }
-
             playlistTrackDao.getTracksByIds(trackIds).map { entities ->
                 val mappedTracks = entities.map { trackMapper.mapFromPlaylistEntity(it) }
                 mappedTracks
@@ -114,5 +113,22 @@ class PlaylistRepositoryImpl(
         }
     }
 
+    override suspend fun deleteTrackFromPlaylist(trackId: Long, playlistId: Long) {
+        playlistTrackDao.deleteTrackFromPlaylist(trackId, playlistId)
+        val existingTrackIdsJson = playlistDao.getTrackIdsForPlaylist(playlistId) ?: "[]"
+        val trackIdsList =
+            gson.fromJson(existingTrackIdsJson, Array<String>::class.java).toMutableList()
+        trackIdsList.remove(trackId.toString())
+
+        playlistDao.updatePlaylistTracks(playlistId, gson.toJson(trackIdsList), trackIdsList.size)
+        removeTrackIfUnused(trackId)
+    }
+
+    override suspend fun removeTrackIfUnused(trackId: Long) {
+        val usageCount = playlistTrackDao.getTrackUsageCount(trackId)
+        if (usageCount == 0) {
+            playlistTrackDao.deleteTrackIfUnused(trackId)
+        }
+    }
 
 }
