@@ -1,7 +1,6 @@
 package com.example.playlistmaker.presentation.media.playlist.playlistdetails
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,6 +50,12 @@ class PlaylistDetailsFragment : Fragment() {
 
         viewModel.loadTracks(playlistId)
 
+        observeViewModel(playlistId)
+
+
+    }
+
+    private fun observeViewModel(playlistId: Long) {
         lifecycleScope.launch {
             viewModel.getPlaylistDetails(playlistId).collect { playlist ->
                 displayPlaylistDetails(playlist)
@@ -72,8 +77,6 @@ class PlaylistDetailsFragment : Fragment() {
         binding.detailsToolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
-
-
     }
 
     private fun setupBottomSheet() {
@@ -84,10 +87,8 @@ class PlaylistDetailsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        trackAdapter = PlaylistTrackAdapter(
-            onTrackClick = { track -> openAudioPlayer(track) },
-            onTrackLongClick = { track -> showDeleteTrackDialog(track) }
-        )
+        trackAdapter = PlaylistTrackAdapter(onTrackClick = { track -> openAudioPlayer(track) },
+            onTrackLongClick = { track -> showDeleteTrackDialog(track) })
 
         binding.rvPlaylistTracks.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -101,21 +102,16 @@ class PlaylistDetailsFragment : Fragment() {
     }
 
     private fun showDeleteTrackDialog(track: PlaylistTrack) {
-        androidx.appcompat.app.AlertDialog.Builder(requireContext())
-            .setTitle("Удалить трек")
-            .setMessage("Хотите удалить трек?")
-            .setPositiveButton("Да") { _, _ ->
+        androidx.appcompat.app.AlertDialog.Builder(requireContext()).setTitle("")
+            .setMessage("Хотите удалить трек?").setPositiveButton("Да") { _, _ ->
                 viewModel.deleteTrack(track.trackId.toLong(), arguments?.getLong("playlistId") ?: 0)
-            }
-            .setNegativeButton("Нет", null)
-            .show()
+            }.setNegativeButton("Нет", null).show()
     }
 
     private fun displayPlaylistDetails(playlist: Playlist) {
         binding.detailsPlaylistName.text = playlist.name
         binding.detailsDesc.text = playlist.description
-        binding.detailsTracksCount.text =
-            getString(R.string.track_count_placeholder, playlist.trackIds.size)
+        binding.detailsTracksCount.text = formatTracksCount(playlist.trackIds.size)
 
         if (!playlist.coverPath.isNullOrEmpty()) {
             Glide.with(binding.root.context).load(playlist.coverPath)
@@ -123,6 +119,18 @@ class PlaylistDetailsFragment : Fragment() {
                 .into(binding.detailsImagePlace)
         } else {
             binding.detailsImagePlace.setImageResource(R.drawable.ic_place_holder)
+        }
+    }
+
+    private fun formatTracksCount(count: Int): String {
+        val lastDigit = count % 10
+        val lastTwoDigits = count % 100
+
+        return when {
+            lastTwoDigits in 11..19 -> "$count треков"
+            lastDigit == 1 -> "$count трек"
+            lastDigit in 2..4 -> "$count трека"
+            else -> "$count треков"
         }
     }
 

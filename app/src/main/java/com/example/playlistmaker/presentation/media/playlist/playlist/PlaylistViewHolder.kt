@@ -13,7 +13,7 @@ class PlaylistViewHolder(
     @SuppressLint("SetTextI18n")
     fun bind(playlist: Playlist) {
         binding.tvPlaylistName.text = playlist.name
-        binding.tvPlaylistTrackCount.text = "${playlist.trackIds.size} треков"
+        binding.tvPlaylistTrackCount.text = formatTracksCount(playlist.trackIds.size)
 
         if (!playlist.coverPath.isNullOrEmpty()) {
             Glide.with(binding.root.context).load(playlist.coverPath).into(binding.ivPlaylist)
@@ -21,6 +21,18 @@ class PlaylistViewHolder(
 
         binding.root.setOnClickListener {
             onPlaylistClick(playlist.id)
+        }
+    }
+
+    private fun formatTracksCount(count: Int): String {
+        val lastDigit = count % 10
+        val lastTwoDigits = count % 100
+
+        return when {
+            lastTwoDigits in 11..19 -> "$count треков"
+            lastDigit == 1 -> "$count трек"
+            lastDigit in 2..4 -> "$count трека"
+            else -> "$count треков"
         }
     }
 }
