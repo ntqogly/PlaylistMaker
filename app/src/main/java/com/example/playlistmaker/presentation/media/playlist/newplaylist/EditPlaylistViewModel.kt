@@ -18,11 +18,12 @@ class EditPlaylistViewModel(
         _playlistData.value = playlist
     }
 
-    fun updatePlaylist(name: String, description: String) {
+    fun updatePlaylist(name: String, description: String, coverPath: String?) {
         _playlistData.value?.let { currentPlaylist ->
             val updatedPlaylist = currentPlaylist.copy(
                 name = name,
-                description = description
+                description = description,
+                coverPath = coverPath ?: currentPlaylist.coverPath
             )
 
             viewModelScope.launch {
