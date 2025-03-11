@@ -127,7 +127,11 @@ class PlaylistDetailsFragment : Fragment() {
     private fun displayPlaylistDetails(playlist: Playlist) {
         binding.detailsPlaylistName.text = playlist.name
         binding.detailsDesc.text = playlist.description
-        binding.detailsTracksCount.text = formatTracksCount(playlist.trackIds.size)
+        binding.detailsTracksCount.text = if (playlist.trackIds.isEmpty()) {
+            "Треков нет"
+        } else {
+            formatTracksCount(playlist.trackIds.size)
+        }
 
         if (!playlist.coverPath.isNullOrEmpty()) {
             Glide.with(binding.root.context).load(playlist.coverPath)
@@ -187,7 +191,11 @@ class PlaylistDetailsFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.getPlaylistDetails(playlistId).collectLatest { playlist ->
                 binding.bshMenuPlaylistName.text = playlist.name
-                binding.bshMenuPlaylistTracksCount.text = formatTracksCount(playlist.trackIds.size)
+                binding.bshMenuPlaylistTracksCount.text = if (playlist.trackIds.isEmpty()) {
+                    "Треков нет"
+                } else {
+                    formatTracksCount(playlist.trackIds.size)
+                }
 
                 Glide.with(requireContext()).load(playlist.coverPath ?: R.drawable.ic_place_holder)
                     .transform(

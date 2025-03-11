@@ -47,11 +47,16 @@ class PlaylistDetailsViewModel(private val playlistInteractor: PlaylistInteracto
 
     fun loadTracks(playlistId: Long) {
         viewModelScope.launch {
-            playlistInteractor.getTracksForPlaylist(playlistId).collectLatest { trackList ->
-                _tracks.value = trackList
+            playlistInteractor.getPlaylistById(playlistId).collectLatest { playlist ->
+                val trackIdsOrder = playlist.trackIds
+
+                playlistInteractor.getTracksForPlaylist(playlistId).collectLatest { trackList ->
+                    _tracks.value = trackList.sortedByDescending { trackIdsOrder.indexOf(it.trackId.toString()) }
+                }
             }
         }
     }
+
 
     fun deleteTrack(trackId: Long, playlistId: Long) {
         viewModelScope.launch {

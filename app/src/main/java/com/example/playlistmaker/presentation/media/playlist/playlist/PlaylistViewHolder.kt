@@ -13,7 +13,11 @@ class PlaylistViewHolder(
     @SuppressLint("SetTextI18n")
     fun bind(playlist: Playlist) {
         binding.tvPlaylistName.text = playlist.name
-        binding.tvPlaylistTrackCount.text = formatTracksCount(playlist.trackIds.size)
+        binding.tvPlaylistTrackCount.text = if (playlist.trackIds.isEmpty()) {
+            "Треков нет"
+        } else {
+            formatTracksCount(playlist.trackIds.size)
+        }
 
         if (!playlist.coverPath.isNullOrEmpty()) {
             Glide.with(binding.root.context).load(playlist.coverPath).into(binding.ivPlaylist)
