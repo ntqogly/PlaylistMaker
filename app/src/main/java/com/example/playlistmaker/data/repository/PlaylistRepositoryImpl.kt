@@ -127,4 +127,17 @@ class PlaylistRepositoryImpl(
         }
     }
 
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        val entity = PlaylistEntity(
+            id = playlist.id,
+            name = playlist.name,
+            description = playlist.description,
+            coverPath = playlist.coverPath,
+            trackIds = gson.toJson(playlist.trackIds),
+            trackCount = playlist.trackIds.size
+        )
+        playlistDao.updatePlaylist(entity)
+    }
+
+
 }

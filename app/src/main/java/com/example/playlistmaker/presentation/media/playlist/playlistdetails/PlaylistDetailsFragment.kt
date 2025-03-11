@@ -21,6 +21,7 @@ import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.PlaylistTrack
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -82,6 +83,7 @@ class PlaylistDetailsFragment : Fragment() {
                 binding.playlistTotalDuration.text = totalDuration
             }
         }
+
         binding.detailsToolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
@@ -171,6 +173,11 @@ class PlaylistDetailsFragment : Fragment() {
         binding.bshMenuPlaylistDelete.setOnClickListener {
             menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             showDeletePlaylistDialog(playlistId)
+        }
+
+        binding.bshMenuPlaylistEdit.setOnClickListener {
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            navigateToEditPlaylist(playlistId)
         }
     }
 
@@ -263,9 +270,24 @@ class PlaylistDetailsFragment : Fragment() {
         }
     }
 
+    private fun navigateToEditPlaylist(playlistId: Long) {
+        lifecycleScope.launch {
+            viewModel.getPlaylistDetails(playlistId).collectLatest { playlist ->
+                val bundle = Bundle().apply {
+                    putParcelable("playlist", playlist)
+                }
+                findNavController().navigate(
+                    R.id.action_playlistDetailsFragment_to_editPlaylistFragment,
+                    bundle
+                )
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        lifecycleScope.coroutineContext.cancelChildren()
     }
 }

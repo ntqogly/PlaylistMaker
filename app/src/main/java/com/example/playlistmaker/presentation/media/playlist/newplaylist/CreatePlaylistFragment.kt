@@ -33,10 +33,10 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
-class CreatePlaylistFragment : Fragment() {
+open class CreatePlaylistFragment : Fragment() {
 
     private var _binding: FragmentCreatePlaylistBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     private val viewModel by viewModel<CreatePlaylistViewModel>()
     private var isImageChanged = false

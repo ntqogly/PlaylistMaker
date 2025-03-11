@@ -39,4 +39,8 @@ class PlaylistInteractor(private val repository: PlaylistRepository) {
     suspend fun deletePlaylist(playlistId: Long) {
         repository.deletePlaylist(playlistId)
     }
+
+    suspend fun updatePlaylist(playlist: Playlist) {
+        repository.updatePlaylist(playlist)
+    }
 }

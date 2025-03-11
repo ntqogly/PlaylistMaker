@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 
@@ -40,4 +41,7 @@ interface PlaylistDao {
             updatePlaylistTracks(playlistId, Gson().toJson(trackIdsList), trackIdsList.size)
         }
     }
+
+    @Update
+    suspend fun updatePlaylist(playlist: PlaylistEntity)
 }
