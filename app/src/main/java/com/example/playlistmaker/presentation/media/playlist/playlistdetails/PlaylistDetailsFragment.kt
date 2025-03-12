@@ -3,10 +3,12 @@ package com.example.playlistmaker.presentation.media.playlist.playlistdetails
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -20,6 +22,7 @@ import com.example.playlistmaker.databinding.FragmentPlaylistDetailsBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.PlaylistTrack
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.collectLatest
@@ -74,6 +77,20 @@ class PlaylistDetailsFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.tracks.collectLatest { trackList ->
                 trackAdapter.updateTracks(trackList)
+                if (trackList.isEmpty()) {
+                    val snackbar = Snackbar.make(binding.root, "Треков нет", Snackbar.LENGTH_SHORT)
+
+                    // 🔹 Получаем TextView внутри Snackbar
+                    val snackbarView = snackbar.view
+                    val textView =
+                        snackbarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+
+                    // 🔹 Выравниваем текст по центру
+                    textView.gravity = Gravity.CENTER
+                    textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+
+                    snackbar.show()
+                }
             }
         }
 
@@ -260,9 +277,7 @@ class PlaylistDetailsFragment : Fragment() {
                                 findNavController().popBackStack()
                             }
                         }
-                    }
-                    .setNegativeButton("Нет", null)
-                    .create()
+                    }.setNegativeButton("Нет", null).create()
 
                 dialog.setOnShowListener {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
@@ -285,8 +300,7 @@ class PlaylistDetailsFragment : Fragment() {
                     putParcelable("playlist", playlist)
                 }
                 findNavController().navigate(
-                    R.id.action_playlistDetailsFragment_to_editPlaylistFragment,
-                    bundle
+                    R.id.action_playlistDetailsFragment_to_editPlaylistFragment, bundle
                 )
             }
         }
