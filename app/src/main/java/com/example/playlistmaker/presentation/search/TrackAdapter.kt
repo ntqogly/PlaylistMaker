@@ -3,6 +3,7 @@ package com.example.playlistmaker.presentation.search
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
@@ -14,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class TrackAdapter(
     private var tracks: MutableList<Track>, private val onTrackClick: (Track) -> Unit
-) : RecyclerView.Adapter<TrackViewHolder>() {
+) : ListAdapter<Track, TrackViewHolder>(TrackDiffCallback()) {
 
     private var clickJob: Job? = null
 

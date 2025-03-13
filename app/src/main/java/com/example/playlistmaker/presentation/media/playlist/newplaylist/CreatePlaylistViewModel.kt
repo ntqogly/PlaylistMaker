@@ -8,7 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class CreatePlaylistViewModel(private val playlistInteractor: PlaylistInteractor) : ViewModel() {
+open class CreatePlaylistViewModel(private val playlistInteractor: PlaylistInteractor) :
+    ViewModel() {
 
     private val _playlistName = MutableStateFlow("")
     val playlistName: StateFlow<String> = _playlistName

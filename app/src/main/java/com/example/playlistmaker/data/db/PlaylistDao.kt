@@ -1,10 +1,10 @@
 package com.example.playlistmaker.data.db
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 
@@ -19,8 +19,11 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlists WHERE id = :playlistId")
     suspend fun getPlaylistById(playlistId: Long): PlaylistEntity?
 
-    @Delete
-    suspend fun deletePlaylist(playlist: PlaylistEntity)
+    @Query("SELECT * FROM playlists WHERE id = :playlistId")
+    fun observePlaylistById(playlistId: Long): Flow<PlaylistEntity>
+
+    @Query("DELETE FROM playlists WHERE id = :playlistId")
+    suspend fun deletePlaylistById(playlistId: Long)
 
     @Query("UPDATE playlists SET trackIds = :trackIds, trackCount = :trackCount WHERE id = :playlistId")
     suspend fun updatePlaylistTracks(playlistId: Long, trackIds: String, trackCount: Int)
@@ -38,4 +41,7 @@ interface PlaylistDao {
             updatePlaylistTracks(playlistId, Gson().toJson(trackIdsList), trackIdsList.size)
         }
     }
+
+    @Update
+    suspend fun updatePlaylist(playlist: PlaylistEntity)
 }

@@ -2,13 +2,14 @@ package com.example.playlistmaker.presentation.player
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.TrackListItemBottomSheetBinding
 import com.example.playlistmaker.domain.models.Playlist
 
 class PlaylistBottomSheetAdapter(
     private val onPlaylistClick: (Long) -> Unit
-) : RecyclerView.Adapter<PlaylistBottomSheetViewHolder>() {
+) : ListAdapter<Playlist, PlaylistBottomSheetViewHolder>(PlaylistBottomSheetDiffCallback()) {
 
     private var playlists: List<Playlist> = emptyList()
 
